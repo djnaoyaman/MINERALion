@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MINERALion モール上陸作戦｜議事録 2026.05.13</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#0033AD;
+    --bg:#ffffff;
+    --bg-soft:#e9f2ff;
+    --line:#dce0e0;
+    --text:#000000;
+    --text-mute:#585858;
+    --warn-bg:#fff7f0;
+    --warn-border:#e89a4e;
+    --font-en:'Instrument Sans', sans-serif;
+    --font-jp:'Noto Sans JP','游ゴシック体','Yu Gothic',sans-serif;
+
+    /* Fluid Typography */
+    --fs-eyebrow: clamp(11px, 0.7vw + 9px, 13px);
+    --fs-label:   clamp(10px, 0.4vw + 9px, 11px);
+    --fs-meta:    clamp(13px, 0.4vw + 12px, 14px);
+    --fs-body:    clamp(13px, 0.4vw + 12px, 15px);
+    --fs-h2:      clamp(20px, 1.2vw + 16px, 26px);
+    --fs-h3:      clamp(16px, 0.6vw + 14px, 18px);
+    --fs-h1:      clamp(28px, 3.2vw + 16px, 48px);
+    --fs-display: clamp(36px, 5vw + 16px, 72px);
+    --fs-num-lg:  clamp(32px, 3vw + 16px, 48px);
+    --fs-num-md:  clamp(28px, 2.4vw + 14px, 42px);
+    --fs-num-sm:  clamp(22px, 1.8vw + 12px, 32px);
+    --fs-tldr:    clamp(20px, 1.6vw + 14px, 30px);
+
+    /* Fluid Spacing */
+    --pad-page-x: clamp(20px, 4vw, 48px);
+    --pad-page-y: clamp(40px, 5vw, 80px);
+    --gap-section: clamp(56px, 6vw, 96px);
+    --pad-card-lg: clamp(24px, 3vw, 56px);
+    --pad-card-md: clamp(20px, 2.4vw, 32px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-text-size-adjust:100%}
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-jp);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;font-feature-settings:"palt"}
+  img,svg{max-width:100%;display:block}
+  .wrap{max-width:1080px;margin:0 auto;padding:var(--pad-page-y) var(--pad-page-x) calc(var(--pad-page-y) * 1.5)}
+
+  /* Header */
+  .header{border-top:1px solid var(--text);padding-top:clamp(20px, 2.4vw, 32px);margin-bottom:var(--gap-section)}
+  .header-top{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:baseline;margin-bottom:clamp(28px, 4vw, 48px);font-family:var(--font-en);font-size:var(--fs-label);letter-spacing:0.08em;color:var(--text-mute)}
+  .header-top span{text-transform:uppercase}
+  .eyebrow{font-family:var(--font-en);font-size:var(--fs-eyebrow);font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;margin-bottom:clamp(16px, 2vw, 24px)}
+  h1{font-family:var(--font-jp);font-weight:600;font-size:var(--fs-h1);line-height:1.3;letter-spacing:0.01em;margin-bottom:clamp(20px, 2.4vw, 32px)}
+  h1 .en{font-family:var(--font-en);font-weight:600;color:var(--primary);display:block;font-size:clamp(14px, 0.8vw + 12px, 18px);letter-spacing:0.08em;margin-top:clamp(10px, 1.2vw, 16px)}
+
+  .meta{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:clamp(32px, 4vw, 56px)}
+  .meta-item{padding:clamp(16px, 1.6vw, 20px) clamp(16px, 1.8vw, 24px) clamp(16px, 1.6vw, 20px) 0;border-right:1px solid var(--line)}
+  .meta-item:last-child{border-right:none}
+  .meta-label{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--text-mute);text-transform:uppercase;margin-bottom:6px}
+  .meta-value{font-size:var(--fs-meta);font-weight:500;word-break:break-word}
+
+  /* TL;DR */
+  .tldr{background:var(--bg-soft);padding:var(--pad-card-lg);margin-bottom:var(--gap-section)}
+  .tldr-label{font-family:var(--font-en);font-size:var(--fs-eyebrow);font-weight:600;letter-spacing:0.14em;color:var(--primary);text-transform:uppercase;margin-bottom:clamp(16px, 2vw, 24px)}
+  .tldr-headline{font-family:var(--font-jp);font-weight:600;font-size:var(--fs-tldr);line-height:1.5;letter-spacing:0.01em;color:var(--text)}
+  .tldr-headline .accent{color:var(--primary)}
+  .tldr-flow{display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;margin-top:clamp(28px, 3vw, 40px);border-top:1px solid var(--primary);padding-top:clamp(20px, 2vw, 24px)}
+  .tldr-flow-step{font-family:var(--font-en);font-size:clamp(12px, 0.4vw + 11px, 13px);font-weight:600;letter-spacing:0.06em;color:var(--primary);position:relative;padding-right:24px}
+  .tldr-flow-step::after{content:"→";position:absolute;right:8px;top:0;color:var(--primary)}
+  .tldr-flow-step:last-child::after{display:none}
+  .tldr-flow-step span{display:block;font-size:clamp(10px, 0.3vw + 9px, 11px);color:var(--text-mute);font-weight:500;margin-top:6px;letter-spacing:0.04em}
+
+  /* Section */
+  section{margin-bottom:clamp(48px, 6vw, 80px)}
+  .section-head{display:flex;align-items:baseline;gap:clamp(16px, 1.8vw, 24px);padding-bottom:clamp(16px, 1.6vw, 20px);border-bottom:1px solid var(--text);margin-bottom:clamp(28px, 3vw, 40px);flex-wrap:wrap}
+  .section-num{font-family:var(--font-en);font-size:13px;font-weight:600;letter-spacing:0.08em;color:var(--primary);min-width:32px}
+  h2{font-family:var(--font-jp);font-weight:600;font-size:var(--fs-h2);letter-spacing:0.01em;flex:1;min-width:0}
+  h2 .en{font-family:var(--font-en);font-size:11px;font-weight:500;color:var(--text-mute);letter-spacing:0.1em;margin-left:12px;text-transform:uppercase;display:inline-block}
+
+  /* KPI grid (3 cells) */
+  .kpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  .kpi-cell{padding:var(--pad-card-md);border-right:1px solid var(--line);border-bottom:1px solid var(--line);position:relative}
+  .kpi-cell .num{font-family:var(--font-en);font-size:var(--fs-num-md);font-weight:600;color:var(--primary);line-height:1;margin-bottom:8px;letter-spacing:-0.02em}
+  .kpi-cell .num small{font-size:0.45em;color:var(--text-mute);font-weight:500;margin-left:4px}
+  .kpi-cell .label{font-family:var(--font-en);font-size:var(--fs-label);font-weight:600;letter-spacing:0.1em;color:var(--text-mute);text-transform:uppercase;margin-bottom:clamp(12px, 1.4vw, 16px)}
+  .kpi-cell .desc{font-size:var(--fs-body);color:var(--text)}
+  .kpi-cell.highlight{background:var(--bg-soft)}
+  .kpi-cell.danger{background:#fff5f5}
+  .kpi-cell.danger .num{color:#c63a3a}
+
+  .conclusion{margin-top:clamp(20px, 2.4vw, 32px);padding:clamp(20px, 2.4vw, 28px) clamp(20px, 2.4vw, 32px);border:1px solid var(--primary);display:flex;align-items:center;gap:clamp(16px, 1.8vw, 24px);flex-wrap:wrap}
+  .conclusion-label{font-family:var(--font-en);font-size:var(--fs-label);font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;white-space:nowrap}
+  .conclusion-text{font-weight:600;font-size:clamp(15px, 0.8vw + 12px, 18px);flex:1;min-width:200px}
+  .conclusion-text .accent{color:var(--primary)}
+
+  /* Budget block */
+  .budget{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line)}
+  .budget-cell{padding:var(--pad-card-md);border-right:1px solid var(--line)}
+  .budget-cell:last-child{border-right:none}
+  .budget-cell .label{font-family:var(--font-en);font-size:var(--fs-label);font-weight:600;letter-spacing:0.1em;color:var(--text-mute);text-transform:uppercase;margin-bottom:12px}
+  .budget-cell .target{font-family:var(--font-en);font-size:var(--fs-num-sm);font-weight:600;color:var(--text);line-height:1;letter-spacing:-0.01em}
+  .budget-cell .target .unit{font-size:0.5em;color:var(--text-mute);font-weight:500;margin-left:6px}
+  .budget-cell .status{margin-top:10px;font-size:var(--fs-body);color:var(--text-mute)}
+  .budget-cell .status.miss{color:#c63a3a;font-weight:600}
+  .budget-note{margin-top:20px;padding:16px 20px;background:var(--bg-soft);font-size:var(--fs-body);color:var(--text);border-left:2px solid var(--primary)}
+
+  /* Priority */
+  .priority{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+  .priority-item{display:grid;grid-template-columns:clamp(60px, 8vw, 80px) 1fr clamp(180px, 22vw, 240px);gap:clamp(20px, 2.4vw, 32px);padding:clamp(24px, 3vw, 32px) 0;border-bottom:1px solid var(--line);align-items:start}
+  .priority-num{font-family:var(--font-en);font-size:var(--fs-num-lg);font-weight:600;color:var(--primary);line-height:1;letter-spacing:-0.02em}
+  .priority-body h3{font-family:var(--font-jp);font-size:var(--fs-h3);font-weight:600;margin-bottom:clamp(8px, 1vw, 12px)}
+  .priority-body p{font-size:var(--fs-body);color:var(--text-mute);line-height:1.7}
+  .priority-actions{font-size:13px}
+  .priority-actions-label{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;margin-bottom:10px}
+  .priority-actions ul{list-style:none}
+  .priority-actions li{padding:6px 0;padding-left:16px;position:relative;border-bottom:1px solid var(--line);font-size:var(--fs-body)}
+  .priority-actions li:last-child{border-bottom:none}
+  .priority-actions li::before{content:"";position:absolute;left:0;top:14px;width:8px;height:1px;background:var(--primary)}
+  .priority-actions li.done::before{background:#2ea862;width:10px}
+  .priority-actions li.done{color:var(--text)}
+  .priority-actions li .check{font-family:var(--font-en);font-size:9px;color:#2ea862;font-weight:600;margin-left:6px;letter-spacing:0.08em}
+
+  /* Strategy */
+  .strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px, 1.8vw, 24px)}
+  .strategy-card{padding:var(--pad-card-md);border:1px solid var(--line)}
+  .strategy-card.reject{background:#fafafa}
+  .strategy-card.adopt{border-color:var(--primary);background:var(--bg-soft)}
+  .strategy-tag{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:clamp(12px, 1.4vw, 16px);display:inline-block;padding:4px 10px;border:1px solid currentColor}
+  .strategy-card.reject .strategy-tag{color:var(--text-mute)}
+  .strategy-card.adopt .strategy-tag{color:var(--primary)}
+  .strategy-card h3{font-size:var(--fs-h3);font-weight:600;margin-bottom:clamp(8px, 1vw, 12px)}
+  .strategy-card.reject h3{color:var(--text-mute);text-decoration:line-through;text-decoration-thickness:1px}
+  .strategy-card p{font-size:var(--fs-body);color:var(--text-mute);line-height:1.7}
+  .strategy-card .ref{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-family:var(--font-en);font-size:11px;color:var(--primary);letter-spacing:0.06em}
+
+  /* Content */
+  .content-rules{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--line)}
+  .content-rule{padding:var(--pad-card-md);border-right:1px solid var(--line)}
+  .content-rule:last-child{border-right:none}
+  .content-rule .ic{font-family:var(--font-en);font-size:var(--fs-label);font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;margin-bottom:clamp(12px, 1.4vw, 16px)}
+  .content-rule h4{font-size:var(--fs-body);font-weight:600;margin-bottom:8px;line-height:1.5}
+  .content-rule p{font-size:13px;color:var(--text-mute)}
+  .content-warning{margin-top:clamp(16px, 2vw, 24px);padding:clamp(16px, 2vw, 20px) clamp(20px, 2.4vw, 24px);border-left:2px solid var(--primary);background:var(--bg-soft)}
+  .content-warning .label{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;margin-bottom:6px}
+  .content-warning p{font-size:var(--fs-body);font-weight:500}
+
+  /* SEO */
+  .seo-keyword{background:var(--bg-soft);padding:clamp(32px, 4vw, 48px);margin-bottom:clamp(20px, 2.4vw, 32px);text-align:center}
+  .seo-keyword .label{font-family:var(--font-en);font-size:var(--fs-eyebrow);font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;margin-bottom:clamp(12px, 1.4vw, 16px)}
+  .seo-keyword .word{font-family:var(--font-jp);font-size:var(--fs-display);font-weight:600;color:var(--primary);letter-spacing:0.1em;line-height:1}
+  .seo-keyword .sub{font-size:var(--fs-body);color:var(--text-mute);margin-top:clamp(12px, 1.4vw, 16px)}
+  .seo-hierarchy{display:grid;grid-template-columns:1fr 1fr 1fr;border:1px solid var(--line);margin-bottom:24px}
+  .seo-tier{padding:clamp(20px, 2vw, 24px);border-right:1px solid var(--line)}
+  .seo-tier:last-child{border-right:none}
+  .seo-tier .tier{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--text-mute);text-transform:uppercase;margin-bottom:10px}
+  .seo-tier .kw{font-size:var(--fs-h3);font-weight:600;color:var(--text)}
+  .seo-method{padding:clamp(20px, 2vw, 24px);border:1px solid var(--line);background:#fafafa}
+  .seo-method .label{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--primary);text-transform:uppercase;margin-bottom:8px}
+  .seo-method p{font-size:var(--fs-body);color:var(--text)}
+
+  /* Mall — desktop table */
+  .mall-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .mall-table{width:100%;border-collapse:collapse;border-top:1px solid var(--text);min-width:640px}
+  .mall-table th, .mall-table td{padding:clamp(16px, 2vw, 24px) clamp(12px, 1.4vw, 20px);text-align:left;vertical-align:top;border-bottom:1px solid var(--line);font-size:var(--fs-body)}
+  .mall-table th{font-family:var(--font-en);font-size:11px;font-weight:600;letter-spacing:0.12em;color:var(--text-mute);text-transform:uppercase;background:transparent}
+  .mall-table .mall-name{font-family:var(--font-en);font-size:var(--fs-h3);font-weight:600;color:var(--primary);letter-spacing:0.02em;white-space:nowrap}
+  .mall-table .role{font-weight:500}
+  .mall-table .badge{display:inline-block;font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.1em;padding:3px 10px;border:1px solid var(--primary);color:var(--primary);text-transform:uppercase;white-space:nowrap}
+  .mall-table .badge.gray{border-color:var(--text-mute);color:var(--text-mute)}
+
+  /* Mall — mobile cards */
+  .mall-cards{display:none;flex-direction:column;border-top:1px solid var(--text)}
+  .mall-card{padding:20px 0;border-bottom:1px solid var(--line)}
+  .mall-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px;flex-wrap:wrap}
+  .mall-card-name{font-family:var(--font-en);font-size:20px;font-weight:600;color:var(--primary);letter-spacing:0.02em}
+  .mall-card .badge{display:inline-block;font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.1em;padding:3px 10px;border:1px solid var(--primary);color:var(--primary);text-transform:uppercase}
+  .mall-card .badge.gray{border-color:var(--text-mute);color:var(--text-mute)}
+  .mall-card-row{display:grid;grid-template-columns:90px 1fr;gap:12px;padding:6px 0;font-size:13px}
+  .mall-card-row dt{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--text-mute);text-transform:uppercase;padding-top:4px}
+  .mall-card-row dd{color:var(--text);font-size:var(--fs-body)}
+
+  /* Actions */
+  .actions-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  .action{padding:clamp(20px, 2.2vw, 28px) clamp(20px, 2.4vw, 32px);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .action .owner{display:flex;align-items:center;justify-content:space-between;margin-bottom:clamp(12px, 1.4vw, 16px);gap:12px;flex-wrap:wrap}
+  .action .name{font-family:var(--font-jp);font-size:var(--fs-h3);font-weight:600}
+  .action .name .en{font-family:var(--font-en);font-size:11px;font-weight:500;color:var(--text-mute);margin-left:8px;letter-spacing:0.08em}
+  .action .deadline{font-family:var(--font-en);font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--primary);text-transform:uppercase;padding:3px 8px;border:1px solid var(--primary);white-space:nowrap}
+  .action ul{list-style:none}
+  .action li{font-size:var(--fs-body);padding:6px 0;padding-left:14px;position:relative;color:var(--text)}
+  .action li::before{content:"";position:absolute;left:0;top:14px;width:6px;height:1px;background:var(--primary)}
+
+  /* Footer */
+  .footer{margin-top:clamp(72px, 9vw, 120px);padding-top:clamp(20px, 2.4vw, 32px);border-top:1px solid var(--text);display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:baseline;font-family:var(--font-en);font-size:11px;letter-spacing:0.1em;color:var(--text-mute);text-transform:uppercase}
+
+  /* ≤1024px Tablet */
+  @media (max-width:1024px){
+    .meta{grid-template-columns:repeat(2, 1fr)}
+    .meta-item:nth-child(2){border-right:none}
+    .meta-item:nth-child(1),
+    .meta-item:nth-child(2){border-bottom:1px solid var(--line)}
+    .priority-item{grid-template-columns:clamp(56px, 7vw, 72px) 1fr;gap:20px}
+    .priority-actions{grid-column:1 / -1;padding-top:12px;border-top:1px dashed var(--line);margin-top:8px}
+    .kpi-grid{grid-template-columns:1fr 1fr}
+    .kpi-cell:nth-child(3){grid-column:1 / -1}
+  }
+
+  /* ≤768px Mobile */
+  @media (max-width:768px){
+    h1{letter-spacing:0}
+    .tldr-flow{grid-template-columns:1fr 1fr;gap:14px}
+    .tldr-flow-step{padding-right:0}
+    .tldr-flow-step::after{display:none}
+    .kpi-grid{grid-template-columns:1fr}
+    .kpi-cell:nth-child(3){grid-column:auto}
+    .budget{grid-template-columns:1fr}
+    .budget-cell{border-right:none;border-bottom:1px solid var(--line)}
+    .budget-cell:last-child{border-bottom:none}
+    .strategy-grid{grid-template-columns:1fr}
+    .content-rules{grid-template-columns:1fr}
+    .content-rule{border-right:none;border-bottom:1px solid var(--line)}
+    .content-rule:last-child{border-bottom:none}
+    .seo-hierarchy{grid-template-columns:1fr}
+    .seo-tier{border-right:none;border-bottom:1px solid var(--line)}
+    .seo-tier:last-child{border-bottom:none}
+    .actions-grid{grid-template-columns:1fr}
+    .mall-wrap{display:none}
+    .mall-cards{display:flex}
+  }
+
+  /* ≤480px Small Mobile */
+  @media (max-width:480px){
+    .header-top{flex-direction:column;align-items:flex-start;gap:6px}
+    .meta{grid-template-columns:1fr}
+    .meta-item{border-right:none;border-bottom:1px solid var(--line);padding:14px 0}
+    .meta-item:last-child{border-bottom:none}
+    .tldr-flow{grid-template-columns:1fr}
+    .priority-item{grid-template-columns:1fr;gap:14px}
+    .priority-num{font-size:36px}
+    .conclusion{flex-direction:column;align-items:flex-start;gap:10px}
+    h2 .en{display:block;margin-left:0;margin-top:4px}
+    .section-head{gap:12px}
+    .action .owner{flex-direction:column;align-items:flex-start}
+    .mall-card-row{grid-template-columns:1fr;gap:4px}
+  }
+
+  @media print{
+    .wrap{padding:24px}
+    section{break-inside:avoid;margin-bottom:32px}
+    .tldr, .kpi-cell.highlight, .seo-keyword, .content-warning, .budget-note{background:#f5f5f5 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="header">
+    <div class="header-top">
+      <span>SPIC Inc. / Brand Management</span>
+      <span>2026.05.13 / Internal Memo</span>
+    </div>
+    <div class="eyebrow">Meeting Minutes — Vol.05.13</div>
+    <h1>
+      MINERALion モール上陸作戦
+      <span class="en">Strategy Review &amp; Action Plan</span>
+    </h1>
+    <div class="meta">
+      <div class="meta-item"><div class="meta-label">Date</div><div class="meta-value">2026.05.13</div></div>
+      <div class="meta-item"><div class="meta-label">Owner</div><div class="meta-value">宮崎直哉</div></div>
+      <div class="meta-item"><div class="meta-label">Channel</div><div class="meta-value">Rakuten / Amazon / Yahoo / Qoo10</div></div>
+      <div class="meta-item"><div class="meta-label">Next Deadline</div><div class="meta-value">2026.05.20 13:00</div></div>
+    </div>
+  </header>
+
+  <section class="tldr">
+    <div class="tldr-label">In One Line — 全体戦略</div>
+    <p class="tldr-headline">
+      <span class="accent">Lypo-C基盤</span>を活用し、<br>
+      トラフィック拡大 → 試用 → レビュー → <span class="accent">CV最大化</span>の流れを構築する。
+    </p>
+    <div class="tldr-flow">
+      <div class="tldr-flow-step">01 / Traffic<span>流入拡大</span></div>
+      <div class="tldr-flow-step">02 / Trial<span>少量版で試用</span></div>
+      <div class="tldr-flow-step">03 / Review<span>レビュー蓄積</span></div>
+      <div class="tldr-flow-step">04 / Conversion<span>定期・本品へ</span></div>
+    </div>
+  </section>
+
+  <!-- 01 Current State -->
+  <section>
+    <div class="section-head"><div class="section-num">01 /</div><h2>現状認識<span class="en">Current State</span></h2></div>
+    <div class="kpi-grid">
+      <div class="kpi-cell">
+        <div class="label">CVR</div>
+        <div class="num">6.7<small>–7.7%</small></div>
+        <div class="desc">悪くない水準。CVR自体は課題ではない。</div>
+      </div>
+      <div class="kpi-cell">
+        <div class="label">Repeat Rate</div>
+        <div class="num">65.1<small>%</small></div>
+        <div class="desc">新ブランドとしては高水準。製品力は証明されている。</div>
+      </div>
+      <div class="kpi-cell highlight">
+        <div class="label">Traffic — 真の課題</div>
+        <div class="num">不足</div>
+        <div class="desc">流入の大半が指名検索。新規接点が圧倒的に足りていない。</div>
+      </div>
+    </div>
+    <div class="conclusion">
+      <div class="conclusion-label">Conclusion</div>
+      <div class="conclusion-text">CVR・リピートは合格。優先課題は<span class="accent">レビュー数と流入の絶対量</span>。</div>
+    </div>
+  </section>
+
+  <!-- 02 Budget -->
+  <section>
+    <div class="section-head"><div class="section-num">02 /</div><h2>売上目標・予算進捗<span class="en">Budget &amp; Forecast</span></h2></div>
+    <div class="budget">
+      <div class="budget-cell">
+        <div class="label">May Target</div>
+        <div class="target">3,100,000<span class="unit">JPY</span></div>
+        <div class="status miss">現状未達 — 巻き返し策が必要</div>
+      </div>
+      <div class="budget-cell">
+        <div class="label">Approach</div>
+        <div class="target" style="font-size:clamp(15px, 0.8vw + 12px, 18px);font-family:var(--font-jp);line-height:1.5">クロスページ・レビュー施策で巻き返し</div>
+        <div class="status">下方修正も含め柔軟に対応する方針で合意。</div>
+      </div>
+    </div>
+    <div class="budget-note">
+      予算表・進捗は全社共有済み。月次の数字よりも、レビューと流入を生む施策のスループットを優先する。
+    </div>
+  </section>
+
+  <!-- 03 Priority -->
+  <section>
+    <div class="section-head"><div class="section-num">03 /</div><h2>優先施策<span class="en">Top Priorities</span></h2></div>
+    <div class="priority">
+      <div class="priority-item">
+        <div class="priority-num">01</div>
+        <div class="priority-body">
+          <h3>商品ページ改善（即時対応）</h3>
+          <p>LPが主要着地ページである以上、トラフィック増に備えて最低限の整備が必要。中村提案により最優先で着手。低コスト・即実装を貫く。</p>
+        </div>
+        <div class="priority-actions">
+          <div class="priority-actions-label">Actions</div>
+          <ul><li>比較表の追加</li><li>FAQ の追加</li></ul>
+        </div>
+      </div>
+      <div class="priority-item">
+        <div class="priority-num">02</div>
+        <div class="priority-body">
+          <h3>レビュー数の増加</h3>
+          <p>現状レビューは1件のみ。CVRのボトルネック。クーポン配布によるレビュー依頼は実施中。購入数増加とともに自然増する見込み。Qoo10はサンプルマーケット施策で別途仕掛ける。</p>
+        </div>
+        <div class="priority-actions">
+          <div class="priority-actions-label">Status</div>
+          <ul><li>クーポン施策：実施中</li><li>Qoo10：サンプルマーケット検討</li><li>改善ペース：緩やか</li></ul>
+        </div>
+      </div>
+      <div class="priority-item">
+        <div class="priority-num">03</div>
+        <div class="priority-body">
+          <h3>トライアル商品（4包・少容量）の商品化</h3>
+          <p>JANコード取得・価格設定は完了済み。残るボトルネックを整理し優先進行。Lypo-Cで実証済みの「少量トライアル → 定期・大容量へのアップセル」モデルを横展開する。</p>
+        </div>
+        <div class="priority-actions">
+          <div class="priority-actions-label">Status</div>
+          <ul>
+            <li class="done">JANコード取得 <span class="check">DONE</span></li>
+            <li class="done">価格設定 <span class="check">DONE</span></li>
+            <li>4包トライアル即始動</li>
+            <li>中間容量（10本前後）は検討余地</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 Strategy -->
+  <section>
+    <div class="section-head"><div class="section-num">04 /</div><h2>戦略の方向性<span class="en">Strategic Direction</span></h2></div>
+    <div class="strategy-grid">
+      <div class="strategy-card reject">
+        <div class="strategy-tag">Rejected</div>
+        <h3>単体ブランド戦略</h3>
+        <p>MINERALion単体ではまだブランド力が不足。単独で流入を取りに行くのは時期尚早。</p>
+      </div>
+      <div class="strategy-card adopt">
+        <div class="strategy-tag">Adopted</div>
+        <h3>Lypo-C との掛け合わせ</h3>
+        <p>Lypo-Cの既存顧客基盤を活用。クロスコンテンツ作成、商品ページ内でのセット訴求強化を通じ、信頼の借用でCVと流入を効率化する。</p>
+        <div class="ref">REF: Lypo-C VC 28包 アップセル成功モデル</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 Content -->
+  <section>
+    <div class="section-head"><div class="section-num">05 /</div><h2>コンテンツ戦略<span class="en">Content Strategy</span></h2></div>
+    <div class="content-rules">
+      <div class="content-rule"><div class="ic">Theme 01</div><h4>ミネラル不足の啓蒙</h4><p>"見えない不調"に名前をつける役割を担う。</p></div>
+      <div class="content-rule"><div class="ic">Theme 02</div><h4>生活シーン訴求</h4><p>日常の中の必要性を翻訳する。</p></div>
+      <div class="content-rule"><div class="ic">Theme 03</div><h4>Lypo-C 文脈での接続</h4><p>リポシートとの関連で信頼を橋渡し。</p></div>
+    </div>
+    <div class="content-warning">
+      <div class="label">Constraint</div>
+      <p>単純な記事量産はNG。シェアされる設計（拡散性）を最優先とする。ワイヤーフレームは 05.20 13:00 までに宮崎が作成。</p>
+    </div>
+  </section>
+
+  <!-- 06 SEO -->
+  <section>
+    <div class="section-head"><div class="section-num">06 /</div><h2>SEO・検索戦略<span class="en">Search Strategy</span></h2></div>
+    <div class="seo-keyword">
+      <div class="label">Core Keyword — 今期</div>
+      <div class="word">鉄</div>
+      <div class="sub">ミネラル全体は競合過多。プロダクトの強みが集中する「鉄」に張る。</div>
+    </div>
+    <div class="seo-hierarchy">
+      <div class="seo-tier"><div class="tier">Tier 01 / Brand</div><div class="kw">ミネラリオン</div></div>
+      <div class="seo-tier"><div class="tier">Tier 02 / Function</div><div class="kw">イオン化ミネラル</div></div>
+      <div class="seo-tier"><div class="tier">Tier 03 / Big Word</div><div class="kw">ミネラルサプリ</div></div>
+    </div>
+    <div class="seo-method">
+      <div class="label">Method</div>
+      <p>楽天・Amazonは Google とは別アルゴリズム。<strong>モール内の流入クエリ／併売商品データ</strong>を基点にキーワードを設計する。Shopify／Amazonでの流入クエリ調査が前提タスク。</p>
+    </div>
+  </section>
+
+  <!-- 07 Malls -->
+  <section>
+    <div class="section-head"><div class="section-num">07 /</div><h2>モール別戦略<span class="en">Channel Plan</span></h2></div>
+    <div class="mall-wrap">
+      <table class="mall-table">
+        <thead><tr><th>Mall</th><th>Role</th><th>Approach</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td class="mall-name">Rakuten</td><td class="role">主戦場</td><td>ブランドワード／イオン化ミネラル／ミネラルサプリ等を中心に、SEO・コンテンツ・商品ページの三位一体で改善。</td><td><span class="badge">Main</span></td></tr>
+          <tr><td class="mall-name">Amazon</td><td class="role">流入分析の基点</td><td>流入クエリ・併売商品データを活用し、楽天のキーワード設計にも反映。</td><td><span class="badge">Analyze</span></td></tr>
+          <tr><td class="mall-name">Yahoo</td><td class="role">広告チャネル</td><td>広告運用でPayPay経済圏ユーザーへ訴求。短期成果は期待せず地道に運用。</td><td><span class="badge gray">Steady</span></td></tr>
+          <tr><td class="mall-name">Qoo10</td><td class="role">レビュー必須</td><td>レビュー数が掲載条件。サンプルマーケットでレビュー獲得＋認知拡大。メガ割は10%引で参加決定。</td><td><span class="badge gray">Build-up</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mall-cards">
+      <div class="mall-card">
+        <div class="mall-card-head"><div class="mall-card-name">Rakuten</div><span class="badge">Main</span></div>
+        <dl>
+          <div class="mall-card-row"><dt>Role</dt><dd>主戦場</dd></div>
+          <div class="mall-card-row"><dt>Approach</dt><dd>ブランドワード／イオン化ミネラル／ミネラルサプリ等を中心に、SEO・コンテンツ・商品ページの三位一体で改善。</dd></div>
+        </dl>
+      </div>
+      <div class="mall-card">
+        <div class="mall-card-head"><div class="mall-card-name">Amazon</div><span class="badge">Analyze</span></div>
+        <dl>
+          <div class="mall-card-row"><dt>Role</dt><dd>流入分析の基点</dd></div>
+          <div class="mall-card-row"><dt>Approach</dt><dd>流入クエリ・併売商品データを活用し、楽天のキーワード設計にも反映。</dd></div>
+        </dl>
+      </div>
+      <div class="mall-card">
+        <div class="mall-card-head"><div class="mall-card-name">Yahoo</div><span class="badge gray">Steady</span></div>
+        <dl>
+          <div class="mall-card-row"><dt>Role</dt><dd>広告チャネル</dd></div>
+          <div class="mall-card-row"><dt>Approach</dt><dd>広告運用でPayPay経済圏ユーザーへ訴求。短期成果は期待せず地道に運用。</dd></div>
+        </dl>
+      </div>
+      <div class="mall-card">
+        <div class="mall-card-head"><div class="mall-card-name">Qoo10</div><span class="badge gray">Build-up</span></div>
+        <dl>
+          <div class="mall-card-row"><dt>Role</dt><dd>レビュー必須</dd></div>
+          <div class="mall-card-row"><dt>Approach</dt><dd>レビュー数が掲載条件。サンプルマーケットでレビュー獲得＋認知拡大。メガ割は10%引で参加決定。</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 Actions -->
+  <section>
+    <div class="section-head"><div class="section-num">08 /</div><h2>アクション分担<span class="en">Action Items</span></h2></div>
+    <div class="actions-grid">
+      <div class="action">
+        <div class="owner"><div class="name">宮崎<span class="en">Miyazaki</span></div><div class="deadline">Due 05.20 13:00</div></div>
+        <ul>
+          <li>楽天コンテンツページ ワイヤーフレーム＆デザイン作成</li>
+          <li>FAQ／比較表の設計・素材支給</li>
+          <li>クロスページ（Lypo-C × MINERALion）設計</li>
+          <li>Qoo10 サンプルマーケット施策の建て付け</li>
+        </ul>
+      </div>
+      <div class="action">
+        <div class="owner"><div class="name">モールチーム<span class="en">Mall Team</span></div></div>
+        <ul>
+          <li>CRM／広告／SEO 運用</li>
+          <li>商品ページ実装（調理担当）</li>
+          <li>キーワード設計の反映</li>
+        </ul>
+      </div>
+      <div class="action">
+        <div class="owner"><div class="name">鈴木<span class="en">Suzuki</span></div></div>
+        <ul>
+          <li>少容量（トライアルセット）商品化の合理性資料作成</li>
+          <li>意思決定の材料として提出</li>
+        </ul>
+      </div>
+      <div class="action">
+        <div class="owner"><div class="name">金山<span class="en">Kanayama</span></div></div>
+        <ul>
+          <li>モール上の流入クエリ調査</li>
+          <li>併売商品の調査・整理</li>
+        </ul>
+      </div>
+      <div class="action">
+        <div class="owner"><div class="name">中村<span class="en">Nakamura</span></div></div>
+        <ul>
+          <li>Google検索 / 一般検索クエリの調査</li>
+          <li>モールチーム分析との照合</li>
+        </ul>
+      </div>
+      <div class="action">
+        <div class="owner"><div class="name">大竹<span class="en">Ohtake</span></div></div>
+        <ul>
+          <li>Qoo10 サンプルマーケット仕様調査・情報提供</li>
+          <li>Qoo10 メガ割 10%引で参加設定</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>MINERALion × SPIC Inc.</span>
+    <span>Internal Use Only — 2026.05.13</span>
+  </footer>
+
+</div>
+</body>
+</html>
