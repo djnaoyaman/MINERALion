@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>MINERALion 9月売上レポート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F6F8FD;
+  --surface: #FFFFFF;
+  --ink: #0F1B3D;
+  --muted: #5B6786;
+  --line: #DCE3F3;
+  --navy: #0033AD;
+  --navy-dark: #001A57;
+  --ice: #D9E2F7;
+  --marker: #C2410C;
+  --good: #1E8E5A;
+  --warn: #B7791F;
+  --bar-fill: #0033AD;
+  --bar-proj: #0033AD;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0A1230;
+    --surface: #111C42;
+    --ink: #E8EEFB;
+    --muted: #9AA8CC;
+    --line: #22315F;
+    --navy: #6B93FF;
+    --navy-dark: #C9D6FF;
+    --ice: #1C2B5C;
+    --marker: #FB923C;
+    --good: #4ADE9A;
+    --warn: #F2C14E;
+    --bar-fill: #5B87FF;
+    --bar-proj: #5B87FF;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0A1230;
+  --surface: #111C42;
+  --ink: #E8EEFB;
+  --muted: #9AA8CC;
+  --line: #22315F;
+  --navy: #6B93FF;
+  --navy-dark: #C9D6FF;
+  --ice: #1C2B5C;
+  --marker: #FB923C;
+  --good: #4ADE9A;
+  --warn: #F2C14E;
+  --bar-fill: #5B87FF;
+  --bar-proj: #5B87FF;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Instrument Sans", "Yu Gothic", "游ゴシック", "YuGothic", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-right, 0px)) 64px max(20px, env(safe-area-inset-left, 0px)); }
+.topbar {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 20px 0 14px;
+  border-bottom: 2px solid var(--navy);
+  font-size: 14px; color: var(--muted);
+}
+.topbar .brand { color: var(--navy); font-weight: 600; font-size: 17px; letter-spacing: 0.02em; }
+h1 {
+  font-size: clamp(24px, 4.6vw, 34px);
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--navy-dark);
+  margin: 36px 0 8px;
+  max-width: 24em;
+}
+.lead { color: var(--muted); margin: 0 0 28px; font-size: 15px; }
+
+/* gauge */
+.gauge-box { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 44px 24px 52px; }
+.gauge { position: relative; height: 44px; background: var(--ice); border-radius: 3px; }
+.gauge .mtd { position: absolute; left: 0; top: 0; bottom: 0; width: 89.66%; background: var(--bar-fill); border-radius: 3px 0 0 3px; display: flex; align-items: center; padding-left: 14px; color: #fff; font-size: 14px; white-space: nowrap; }
+.gauge .proj { position: absolute; left: 89.66%; top: 0; bottom: 0; width: 3.27%; background: repeating-linear-gradient(135deg, var(--bar-proj) 0 4px, transparent 4px 8px); border: 1px solid var(--bar-proj); border-left: 0; border-radius: 0 3px 3px 0; }
+.gauge .budget { position: absolute; left: 85.93%; top: -12px; bottom: -12px; width: 0; border-left: 2px solid var(--marker); }
+.gauge .budget span { position: absolute; top: -26px; right: 6px; color: var(--marker); font-size: 13px; white-space: nowrap; font-weight: 500; }
+.gauge .landing { position: absolute; right: 7.07%; top: 56px; color: var(--navy); font-size: 14px; font-weight: 500; white-space: nowrap; text-align: right; transform: translateX(0); }
+.gauge-note { margin: 34px 0 0; color: var(--muted); font-size: 13px; }
+
+h2 { font-size: 20px; font-weight: 600; color: var(--navy-dark); margin: 52px 0 14px; }
+.sub { color: var(--muted); font-size: 14px; margin: -6px 0 16px; }
+
+/* table */
+.tbl-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; font-variant-numeric: tabular-nums; }
+th, td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--line); font-size: 15px; white-space: nowrap; }
+th { font-weight: 500; color: var(--muted); font-size: 13px; background: transparent; }
+th:first-child, td:first-child { text-align: left; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.total td { border-top: 2px solid var(--navy); font-weight: 600; background: color-mix(in srgb, var(--ice) 45%, transparent); }
+td.ratio { text-align: left; min-width: 190px; }
+.rbar { display: flex; align-items: center; gap: 10px; }
+.rtrack { position: relative; flex: 1; height: 8px; background: var(--ice); border-radius: 4px; min-width: 70px; }
+.rfill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--bar-fill); border-radius: 4px; }
+.rtick { position: absolute; left: 62.5%; top: -4px; bottom: -4px; border-left: 1.5px solid var(--marker); }
+.rnum { width: 96px; text-align: right; }
+.ch-note { display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+
+/* chart */
+.chart-box { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px 12px 8px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+.chart-box text { fill: var(--ink); font-family: inherit; }
+.chart-box .mlabel { fill: var(--muted); font-size: 13px; }
+.chart-box .vlabel { font-size: 13px; font-weight: 500; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 6px 12px 10px; color: var(--muted); font-size: 13px; }
+.legend i { display: inline-block; width: 14px; height: 10px; margin-right: 6px; vertical-align: -1px; }
+.legend .l-act { background: var(--bar-fill); }
+.legend .l-proj { background: repeating-linear-gradient(135deg, var(--bar-proj) 0 3px, transparent 3px 6px); border: 1px solid var(--bar-proj); }
+.legend .l-bud { height: 0; width: 18px; border-top: 2px solid var(--marker); vertical-align: 3px; }
+
+/* points */
+.points { list-style: none; margin: 0; padding: 0; }
+.points li { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: 4px; padding: 16px 20px; margin-bottom: 12px; }
+.points h3 { margin: 0 0 6px; font-size: 16px; font-weight: 600; color: var(--navy-dark); }
+.points p { margin: 0; font-size: 15px; max-width: 42em; }
+.points p + p { margin-top: 6px; }
+.points .act { color: var(--muted); }
+
+.foot { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; line-height: 1.8; }
+.foot p { margin: 0 0 8px; }
+
+p, li, h1, h2, h3 { overflow-wrap: anywhere; }
+
+@media (min-width: 1200px) {
+  .wrap { max-width: 960px; }
+  body { font-size: 17px; }
+  .points p { font-size: 16px; }
+}
+@media (max-width: 720px) {
+  .chart-box .vlabel { font-size: 18px; }
+  .chart-box .mlabel { font-size: 17px; }
+  h2 { margin-top: 44px; }
+}
+@media (max-width: 640px) {
+  .tbl-wrap { overflow: visible; background: transparent; border: 0; }
+  table, tbody, tr, td { display: block; }
+  table { min-width: 0; }
+  thead { display: none; }
+  tbody tr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 10px; padding: 16px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+  td { padding: 0; border: 0; text-align: left; white-space: normal; }
+  td:first-child { grid-column: 1 / -1; font-weight: 600; font-size: 16px; margin-bottom: 6px; }
+  td[data-label] { font-size: 17px; font-weight: 500; }
+  td[data-label]::before { content: attr(data-label); display: block; color: var(--muted); font-size: 12px; font-weight: 400; }
+  td.ratio { grid-column: 1 / -1; min-width: 0; margin-top: 10px; }
+  tr.total { border-top: 2px solid var(--navy); background: color-mix(in srgb, var(--ice) 45%, var(--surface)); }
+  tr.total td { border-top: 0; background: none; }
+  tbody tr:last-child { margin-bottom: 0; }
+}
+@media (max-width: 480px) {
+  .wrap { padding-bottom: 48px; }
+  .topbar { padding-top: 16px; }
+  .lead { font-size: 14px; }
+  .gauge-box { padding: 44px 14px 56px; }
+  .gauge .mtd { font-size: 12px; padding-left: 8px; }
+  .gauge .landing { font-size: 13px; }
+  .gauge .budget span { font-size: 12px; }
+  .chart-box { padding: 14px 6px 6px; }
+  .chart-box .vlabel { font-size: 24px; }
+  .chart-box .mlabel { font-size: 22px; }
+  .points li { padding: 14px 16px; }
+  .points p { font-size: 15px; }
+}
+@media (max-width: 360px) {
+  .wrap { padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); }
+  .gauge .mtd { font-size: 11px; }
+  tbody tr { padding: 14px 12px; gap: 4px 6px; }
+  td[data-label] { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="brand">MINERALion 売上レポート</span>
+    <span>2026年9月30日作成 / 9月29日出荷分まで</span>
+  </div>
+
+  <h1>9月は修正予算¥11.6Mに対して、着地¥12.55M（108%）の見込みです</h1>
+  <p class="lead">出荷累計は9/29時点で¥12.10Mとなり、月の予算をすでに超えています。金額はすべて税抜です。</p>
+
+  <div class="gauge-box">
+    <div class="gauge" role="img" aria-label="出荷累計12.10百万円、着地見込12.55百万円、修正予算11.6百万円">
+      <div class="mtd">出荷累計 ¥12.10M</div>
+      <div class="proj"></div>
+      <div class="budget"><span>修正予算 ¥11.6M</span></div>
+      <div class="landing">着地見込 ¥12.55M</div>
+    </div>
+    <p class="gauge-note">斜線は9/30（水）の出荷見込み分です。</p>
+  </div>
+
+  <h2>チャネル別の着地見込</h2>
+  <p class="sub">修正予算のチャネル区分に合わせて集計しています。</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>チャネル</th>
+          <th>修正予算</th>
+          <th>出荷累計</th>
+          <th>着地見込</th>
+          <th style="text-align:left">予算比</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>toB既存<span class="ch-note">SPICのコダワリ ほか</span></td>
+          <td data-label="修正予算">¥4.60M</td><td data-label="出荷累計">¥4.60M</td><td data-label="着地見込">¥4.77M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:64.75%"></div><div class="rtick"></div></div><span class="rnum">🌤️ 103.6%</span></div></td>
+        </tr>
+        <tr>
+          <td>自社EC<span class="ch-note">Lypo-C Official</span></td>
+          <td data-label="修正予算">¥5.00M</td><td data-label="出荷累計">¥4.60M</td><td data-label="着地見込">¥4.76M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:59.56%"></div><div class="rtick"></div></div><span class="rnum">🌤️ 95.3%</span></div></td>
+        </tr>
+        <tr>
+          <td>モール<span class="ch-note">楽天・Amazon・Yahoo ほか</span></td>
+          <td data-label="修正予算">¥2.00M</td><td data-label="出荷累計">¥2.91M</td><td data-label="着地見込">¥3.01M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:94.19%"></div><div class="rtick"></div></div><span class="rnum">☀️ 150.7%</span></div></td>
+        </tr>
+        <tr class="total">
+          <td>合計</td>
+          <td data-label="修正予算">¥11.60M</td><td data-label="出荷累計">¥12.10M</td><td data-label="着地見込">¥12.55M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:67.56%"></div><div class="rtick"></div></div><span class="rnum">☀️ 108.1%</span></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="sub" style="margin-top:10px">バーは予算比160%までの目盛りで、赤い線が100%です。</p>
+
+  <h2>4月からの月次推移</h2>
+  <p class="sub">出荷ベースの実績。7月から3か月続けて修正予算を上回っています。</p>
+  <div class="chart-box">
+    <svg viewBox="0 0 720 262" role="img" aria-label="4月から9月の月次出荷売上。4月11.06、5月7.27、6月10.49、7月15.02、8月12.00、9月12.55（見込）百万円">
+      <line x1="30" y1="220" x2="710" y2="220" stroke="var(--line)" stroke-width="1"/>
+      <!-- Apr -->
+      <rect x="50" y="81.7" width="60" height="138.3" fill="var(--bar-fill)" rx="2"/>
+      <text class="vlabel" x="80" y="74" text-anchor="middle">¥11.06M</text>
+      <text class="mlabel" x="80" y="242" text-anchor="middle">4月</text>
+      <!-- May -->
+      <rect x="160" y="129.1" width="60" height="90.9" fill="var(--bar-fill)" rx="2"/>
+      <text class="vlabel" x="190" y="121" text-anchor="middle">¥7.27M</text>
+      <text class="mlabel" x="190" y="242" text-anchor="middle">5月</text>
+      <!-- Jun -->
+      <rect x="270" y="88.9" width="60" height="131.1" fill="var(--bar-fill)" rx="2"/>
+      <line x1="264" y1="107.5" x2="336" y2="107.5" stroke="var(--marker)" stroke-width="2"/>
+      <text class="vlabel" x="300" y="81" text-anchor="middle">¥10.49M</text>
+      <text class="mlabel" x="300" y="242" text-anchor="middle">6月</text>
+      <!-- Jul -->
+      <rect x="380" y="32.2" width="60" height="187.8" fill="var(--bar-fill)" rx="2"/>
+      <line x1="374" y1="85" x2="446" y2="85" stroke="var(--marker)" stroke-width="2"/>
+      <text class="vlabel" x="410" y="24" text-anchor="middle">¥15.02M</text>
+      <text class="mlabel" x="410" y="242" text-anchor="middle">7月</text>
+      <!-- Aug -->
+      <rect x="490" y="70" width="60" height="150" fill="var(--bar-fill)" rx="2"/>
+      <line x1="484" y1="85" x2="556" y2="85" stroke="var(--marker)" stroke-width="2"/>
+      <text class="vlabel" x="520" y="62" text-anchor="middle">¥12.00M</text>
+      <text class="mlabel" x="520" y="242" text-anchor="middle">8月</text>
+      <!-- Sep (projection) -->
+      <defs>
+        <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <rect width="4" height="8" fill="var(--bar-proj)"/>
+        </pattern>
+      </defs>
+      <rect x="600" y="63.2" width="60" height="156.8" fill="url(#hatch)" stroke="var(--bar-proj)" stroke-width="1.5" rx="2"/>
+      <line x1="594" y1="75" x2="666" y2="75" stroke="var(--marker)" stroke-width="2"/>
+      <text class="vlabel" x="630" y="55" text-anchor="middle">¥12.55M</text>
+      <text class="mlabel" x="630" y="242" text-anchor="middle">9月見込</text>
+    </svg>
+    <div class="legend">
+      <span><i class="l-act"></i>出荷実績</span>
+      <span><i class="l-proj"></i>9月は着地見込</span>
+      <span><i class="l-bud"></i>予算（6月のみ見込値、7〜9月は修正予算）</span>
+    </div>
+  </div>
+
+  <h2>注目ポイント</h2>
+  <ul class="points">
+    <li>
+      <h3>全体は予算を超えるペースです</h3>
+      <p>出荷累計¥12.10Mで、月予算¥11.6Mを9/29時点で超えました（104.3%）。着地は¥12.55Mで、予算より¥0.95M上振れの見込みです。7月（¥15.02M）、8月（¥12.00M）に続き、修正予算を3か月連続で上回ります。</p>
+      <p class="act">9/30の出荷が確定したら、確定値に差し替えます。</p>
+    </li>
+    <li>
+      <h3>モールが予算の1.5倍です</h3>
+      <p>モールの累計は¥2.91Mで、予算¥2.0Mを大きく超えています。楽天が¥1.51M、Amazonが¥1.06Mで、楽天は9月だけで8月の月間（¥1.17M）を超えました。予算の置き方が実態より低い可能性があります。</p>
+      <p class="act">10月以降のモール予算（月¥2.1M）は、経企と見直しを相談します。</p>
+    </li>
+    <li>
+      <h3>自社ECだけ予算に届かない見込みです</h3>
+      <p>着地¥4.76Mで、予算¥5.0Mの95.3%（¥0.24M不足）です。Official店は7月¥7.58M、8月¥5.29M、9月は累計¥4.60Mと下がってきています。</p>
+      <p class="act">10月予算は¥5.1Mに上がるため、自社EC向けの施策が必要か確認します。</p>
+    </li>
+    <li>
+      <h3>toB既存は予算どおりです</h3>
+      <p>SPICのコダワリが¥4.41Mで、toB既存の累計は¥4.60Mです。着地は¥4.77M（103.6%）ですが、toBは月末の出荷次第で数字が動きます。医療・非医療の内訳は、店舗別の集計では分けられていません。</p>
+      <p class="act">月末のtoB出荷を確認し、内訳は別途出します。</p>
+    </li>
+    <li>
+      <h3>10月に向けては、8〜9月の水準を保てるかがポイントです</h3>
+      <p>9月の受注累計は¥12.36Mで、前月の同じ期間（¥11.36M）より8.8%多くなっています。一方、直近4週の出荷は前の4週の76%で、7月が突出していたため落ち着いた形です。8〜9月は月¥12M台で安定しています。</p>
+      <p class="act">10月予算¥11.9Mは、この水準を保てれば届きます。月初に進捗を確認します。</p>
+    </li>
+  </ul>
+
+  <div class="foot">
+    <p>集計条件：MINERALionタグの商品、出荷日ベース、税抜、キャンセルとテスト・社販ショップは除外しています。4〜5月は予算表の実績値、6月以降はBigQuery（spic-core）の出荷集計です。</p>
+    <p>チャネル区分：自社EC＝Lypo-C Official、モール＝楽天・Amazon・Yahoo・Qoo10・au PAY・Consumerほか、toB既存＝SPICのコダワリ・エクスチェンジ・Exclusive Shopify。4月の実績が予算表と一致することを確認しています。</p>
+    <p>着地見込：9/30（水）の出荷を直近3か月の曜日別指数で加算した簡易予測です。月末のtoB出荷と、9月下旬の連休の影響は補正していません。</p>
+  </div>
+
+</div>
+</body>
+</html>
