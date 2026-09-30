@@ -187,6 +187,28 @@ p, li, h1, h2, h3 { overflow-wrap: anywhere; }
   tbody tr { padding: 14px 12px; gap: 4px 6px; }
   td[data-label] { font-size: 15px; }
 }
+
+/* ranking */
+.rank { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.rank li { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 4px 14px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.rank li:last-child { border-bottom: 0; }
+.rk { font-size: 22px; font-weight: 600; color: var(--navy); font-variant-numeric: tabular-nums; text-align: center; line-height: 1; }
+.rname { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; font-size: 15px; font-weight: 500; line-height: 1.5; }
+.chip { font-size: 11px; padding: 1px 8px; border-radius: 10px; background: var(--ice); color: var(--navy-dark); font-weight: 500; white-space: nowrap; }
+.rline { height: 8px; background: var(--ice); border-radius: 4px; margin-top: 8px; overflow: hidden; }
+.rline i { display: block; height: 100%; min-width: 3px; background: var(--bar-fill); border-radius: 4px; }
+.rnums { text-align: right; font-variant-numeric: tabular-nums; }
+.rnums .amt { display: block; font-size: 18px; font-weight: 600; line-height: 1.4; }
+.rnums .meta { display: flex; gap: 10px; justify-content: flex-end; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.up { color: var(--good); }
+.down { color: var(--marker); }
+.rank-note { margin: 12px 0 0; color: var(--muted); font-size: 14px; max-width: 42em; }
+@media (max-width: 560px) {
+  .rank li { grid-template-columns: 28px minmax(0, 1fr); padding: 14px 14px; }
+  .rk { font-size: 18px; }
+  .rnums { grid-column: 2; text-align: left; display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 12px; margin-top: 2px; }
+  .rnums .meta { justify-content: flex-start; }
+}
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -195,23 +217,22 @@ p, li, h1, h2, h3 { overflow-wrap: anywhere; }
 
   <div class="topbar">
     <span class="brand">MINERALion 売上レポート</span>
-    <span>2026年9月30日作成 / 9月29日出荷分まで</span>
+    <span>2026年9月30日作成 / 9月30日出荷分まで</span>
   </div>
 
-  <h1>9月は修正予算¥11.6Mに対して、着地¥12.55M（108%）の見込みです</h1>
-  <p class="lead">出荷累計は9/29時点で¥12.10Mとなり、月の予算をすでに超えています。金額はすべて税抜です。</p>
+  <h1>9月の出荷実績は¥12.63M、修正予算¥11.6Mの108.9%でした</h1>
+  <p class="lead">月の予算を¥1.03M上回りました。金額はすべて税抜です。</p>
 
   <div class="gauge-box">
-    <div class="gauge" role="img" aria-label="出荷累計12.10百万円、着地見込12.55百万円、修正予算11.6百万円">
-      <div class="mtd">出荷累計 ¥12.10M</div>
-      <div class="proj"></div>
+    <div class="gauge" role="img" aria-label="出荷実績12.63百万円、修正予算11.6百万円">
+      <div class="mtd" style="width:93.55%">出荷実績 ¥12.63M</div>
       <div class="budget"><span>修正予算 ¥11.6M</span></div>
-      <div class="landing">着地見込 ¥12.55M</div>
+      <div class="landing" style="right:6.45%">予算より +¥1.03M</div>
     </div>
-    <p class="gauge-note">斜線は9/30（水）の出荷見込み分です。</p>
+    <p class="gauge-note">9/30の出荷分まで反映しています。</p>
   </div>
 
-  <h2>チャネル別の着地見込</h2>
+  <h2>チャネル別の実績</h2>
   <p class="sub">修正予算のチャネル区分に合わせて集計しています。</p>
   <div class="tbl-wrap">
     <table>
@@ -219,79 +240,123 @@ p, li, h1, h2, h3 { overflow-wrap: anywhere; }
         <tr>
           <th>チャネル</th>
           <th>修正予算</th>
-          <th>出荷累計</th>
-          <th>着地見込</th>
+          <th>出荷実績</th>
+          <th>差額</th>
           <th style="text-align:left">予算比</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>toB既存<span class="ch-note">SPICのコダワリ ほか</span></td>
-          <td data-label="修正予算">¥4.60M</td><td data-label="出荷累計">¥4.60M</td><td data-label="着地見込">¥4.77M</td>
-          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:64.75%"></div><div class="rtick"></div></div><span class="rnum">🌤️ 103.6%</span></div></td>
+          <td data-label="修正予算">¥4.60M</td><td data-label="出荷実績">¥4.80M</td><td data-label="差額">+¥0.20M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:65.25%"></div><div class="rtick"></div></div><span class="rnum">🌤️ 104.4%</span></div></td>
         </tr>
         <tr>
           <td>自社EC<span class="ch-note">Lypo-C Official</span></td>
-          <td data-label="修正予算">¥5.00M</td><td data-label="出荷累計">¥4.60M</td><td data-label="着地見込">¥4.76M</td>
-          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:59.56%"></div><div class="rtick"></div></div><span class="rnum">🌤️ 95.3%</span></div></td>
+          <td data-label="修正予算">¥5.00M</td><td data-label="出荷実績">¥4.88M</td><td data-label="差額">-¥0.12M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:61.06%"></div><div class="rtick"></div></div><span class="rnum">🌤️ 97.7%</span></div></td>
         </tr>
         <tr>
           <td>モール<span class="ch-note">楽天・Amazon・Yahoo ほか</span></td>
-          <td data-label="修正予算">¥2.00M</td><td data-label="出荷累計">¥2.91M</td><td data-label="着地見込">¥3.01M</td>
-          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:94.19%"></div><div class="rtick"></div></div><span class="rnum">☀️ 150.7%</span></div></td>
+          <td data-label="修正予算">¥2.00M</td><td data-label="出荷実績">¥2.94M</td><td data-label="差額">+¥0.94M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:91.94%"></div><div class="rtick"></div></div><span class="rnum">☀️ 147.1%</span></div></td>
         </tr>
         <tr class="total">
           <td>合計</td>
-          <td data-label="修正予算">¥11.60M</td><td data-label="出荷累計">¥12.10M</td><td data-label="着地見込">¥12.55M</td>
-          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:67.56%"></div><div class="rtick"></div></div><span class="rnum">☀️ 108.1%</span></div></td>
+          <td data-label="修正予算">¥11.60M</td><td data-label="出荷実績">¥12.63M</td><td data-label="差額">+¥1.03M</td>
+          <td class="ratio"><div class="rbar"><div class="rtrack"><div class="rfill" style="width:68.05%"></div><div class="rtick"></div></div><span class="rnum">☀️ 108.9%</span></div></td>
         </tr>
       </tbody>
     </table>
   </div>
   <p class="sub" style="margin-top:10px">バーは予算比160%までの目盛りで、赤い線が100%です。</p>
 
+  <h2>店舗別ランキング</h2>
+  <p class="sub">9月の出荷売上の順位です。前月比は8月との比較、件数は注文件数です。</p>
+  <ol class="rank">
+      <li>
+        <span class="rk">1</span>
+        <div><div class="rname">Lypo-C Official<span class="chip">自社EC</span></div><div class="rline"><i style="width:100%"></i></div></div>
+        <div class="rnums"><span class="amt">¥4.88M</span><span class="meta"><span>構成比 38.7%</span><span class="down">前月比 -7.7%</span><span>628件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">2</span>
+        <div><div class="rname">SPICのコダワリ<span class="chip">toB既存</span></div><div class="rline"><i style="width:94.4%"></i></div></div>
+        <div class="rnums"><span class="amt">¥4.61M</span><span class="meta"><span>構成比 36.5%</span><span class="up">前月比 +22.0%</span><span>66件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">3</span>
+        <div><div class="rname">Lypo-Cショップ楽天市場<span class="chip">モール</span></div><div class="rline"><i style="width:31.15%"></i></div></div>
+        <div class="rnums"><span class="amt">¥1.52M</span><span class="meta"><span>構成比 12.0%</span><span class="up">前月比 +29.9%</span><span>232件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">4</span>
+        <div><div class="rname">Lypo-CショップAmazon<span class="chip">モール</span></div><div class="rline"><i style="width:22.14%"></i></div></div>
+        <div class="rnums"><span class="amt">¥1.08M</span><span class="meta"><span>構成比 8.6%</span><span class="down">前月比 -11.2%</span><span>181件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">5</span>
+        <div><div class="rname">Lypo-CショップYahoo<span class="chip">モール</span></div><div class="rline"><i style="width:4.12%"></i></div></div>
+        <div class="rnums"><span class="amt">¥0.20M</span><span class="meta"><span>構成比 1.6%</span><span class="down">前月比 -0.9%</span><span>26件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">6</span>
+        <div><div class="rname">Lypo-CショップQoo10<span class="chip">モール</span></div><div class="rline"><i style="width:2.43%"></i></div></div>
+        <div class="rnums"><span class="amt">¥0.12M</span><span class="meta"><span>構成比 0.9%</span><span class="down">前月比 -4.9%</span><span>21件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">7</span>
+        <div><div class="rname">Exclusive Shopify<span class="chip">toB既存</span></div><div class="rline"><i style="width:2.42%"></i></div></div>
+        <div class="rnums"><span class="amt">¥0.12M</span><span class="meta"><span>構成比 0.9%</span><span class="up">前月比 +22.9%</span><span>22件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">8</span>
+        <div><div class="rname">エクスチェンジ<span class="chip">toB既存</span></div><div class="rline"><i style="width:1.52%"></i></div></div>
+        <div class="rnums"><span class="amt">¥0.07M</span><span class="meta"><span>構成比 0.6%</span><span class="">前月比 ±0%</span><span>1件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">9</span>
+        <div><div class="rname">Consumer<span class="chip">モール</span></div><div class="rline"><i style="width:0.31%"></i></div></div>
+        <div class="rnums"><span class="amt">¥0.02M</span><span class="meta"><span>構成比 0.1%</span><span class="down">前月比 -57.6%</span><span>1件</span></span></div>
+      </li>
+      <li>
+        <span class="rk">10</span>
+        <div><div class="rname">Lypo-CショップauPAYマーケット<span class="chip">モール</span></div><div class="rline"><i style="width:0.12%"></i></div></div>
+        <div class="rnums"><span class="amt">¥0.006M</span><span class="meta"><span>構成比 0.0%</span><span class="">前月比 新規</span><span>1件</span></span></div>
+      </li>
+  </ol>
+  <p class="rank-note">上位2店（Official、コダワリ）で全体の75.2%を占めます。8月はAmazonが楽天を上回っていましたが、9月は楽天が逆転して3位になりました。</p>
+
   <h2>4月からの月次推移</h2>
   <p class="sub">出荷ベースの実績。7月から3か月続けて修正予算を上回っています。</p>
   <div class="chart-box">
-    <svg viewBox="0 0 720 262" role="img" aria-label="4月から9月の月次出荷売上。4月11.06、5月7.27、6月10.49、7月15.02、8月12.00、9月12.55（見込）百万円">
+    <svg viewBox="0 0 720 262" role="img" aria-label="4月から9月の月次出荷売上。4月11.06、5月7.27、6月10.49、7月15.02、8月12.00、9月12.63百万円">
       <line x1="30" y1="220" x2="710" y2="220" stroke="var(--line)" stroke-width="1"/>
-      <!-- Apr -->
       <rect x="50" y="81.7" width="60" height="138.3" fill="var(--bar-fill)" rx="2"/>
       <text class="vlabel" x="80" y="74" text-anchor="middle">¥11.06M</text>
       <text class="mlabel" x="80" y="242" text-anchor="middle">4月</text>
-      <!-- May -->
       <rect x="160" y="129.1" width="60" height="90.9" fill="var(--bar-fill)" rx="2"/>
       <text class="vlabel" x="190" y="121" text-anchor="middle">¥7.27M</text>
       <text class="mlabel" x="190" y="242" text-anchor="middle">5月</text>
-      <!-- Jun -->
       <rect x="270" y="88.9" width="60" height="131.1" fill="var(--bar-fill)" rx="2"/>
       <line x1="264" y1="107.5" x2="336" y2="107.5" stroke="var(--marker)" stroke-width="2"/>
       <text class="vlabel" x="300" y="81" text-anchor="middle">¥10.49M</text>
       <text class="mlabel" x="300" y="242" text-anchor="middle">6月</text>
-      <!-- Jul -->
       <rect x="380" y="32.2" width="60" height="187.8" fill="var(--bar-fill)" rx="2"/>
       <line x1="374" y1="85" x2="446" y2="85" stroke="var(--marker)" stroke-width="2"/>
       <text class="vlabel" x="410" y="24" text-anchor="middle">¥15.02M</text>
       <text class="mlabel" x="410" y="242" text-anchor="middle">7月</text>
-      <!-- Aug -->
       <rect x="490" y="70" width="60" height="150" fill="var(--bar-fill)" rx="2"/>
       <line x1="484" y1="85" x2="556" y2="85" stroke="var(--marker)" stroke-width="2"/>
       <text class="vlabel" x="520" y="62" text-anchor="middle">¥12.00M</text>
       <text class="mlabel" x="520" y="242" text-anchor="middle">8月</text>
-      <!-- Sep (projection) -->
-      <defs>
-        <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="4" height="8" fill="var(--bar-proj)"/>
-        </pattern>
-      </defs>
-      <rect x="600" y="63.2" width="60" height="156.8" fill="url(#hatch)" stroke="var(--bar-proj)" stroke-width="1.5" rx="2"/>
+      <rect x="600" y="62.1" width="60" height="157.9" fill="var(--bar-fill)" rx="2"/>
       <line x1="594" y1="75" x2="666" y2="75" stroke="var(--marker)" stroke-width="2"/>
-      <text class="vlabel" x="630" y="55" text-anchor="middle">¥12.55M</text>
-      <text class="mlabel" x="630" y="242" text-anchor="middle">9月見込</text>
+      <text class="vlabel" x="630" y="54" text-anchor="middle">¥12.63M</text>
+      <text class="mlabel" x="630" y="242" text-anchor="middle">9月</text>
     </svg>
     <div class="legend">
       <span><i class="l-act"></i>出荷実績</span>
-      <span><i class="l-proj"></i>9月は着地見込</span>
       <span><i class="l-bud"></i>予算（6月のみ見込値、7〜9月は修正予算）</span>
     </div>
   </div>
@@ -299,28 +364,28 @@ p, li, h1, h2, h3 { overflow-wrap: anywhere; }
   <h2>注目ポイント</h2>
   <ul class="points">
     <li>
-      <h3>全体は予算を超えるペースです</h3>
-      <p>出荷累計¥12.10Mで、月予算¥11.6Mを9/29時点で超えました（104.3%）。着地は¥12.55Mで、予算より¥0.95M上振れの見込みです。7月（¥15.02M）、8月（¥12.00M）に続き、修正予算を3か月連続で上回ります。</p>
-      <p class="act">9/30の出荷が確定したら、確定値に差し替えます。</p>
+      <h3>全体は予算を超えました</h3>
+      <p>出荷実績は¥12.63Mで、月予算¥11.6Mを¥1.03M上回りました（108.9%）。7月（¥15.02M）、8月（¥12.00M）に続き、修正予算を3か月連続で上回っています。</p>
+      <p class="act">10月予算は¥11.9Mです。9月と同じ水準なら届きます。</p>
     </li>
     <li>
       <h3>モールが予算の1.5倍です</h3>
-      <p>モールの累計は¥2.91Mで、予算¥2.0Mを大きく超えています。楽天が¥1.51M、Amazonが¥1.06Mで、楽天は9月だけで8月の月間（¥1.17M）を超えました。予算の置き方が実態より低い可能性があります。</p>
+      <p>モールは¥2.94Mで、予算¥2.0Mの147.1%でした。楽天が¥1.52M（8月比+29.9%）、Amazonが¥1.08M（同-11.2%）で、楽天は8月の月間（¥1.17M）を超えています。予算の置き方が実態より低い可能性があります。</p>
       <p class="act">10月以降のモール予算（月¥2.1M）は、経企と見直しを相談します。</p>
     </li>
     <li>
-      <h3>自社ECだけ予算に届かない見込みです</h3>
-      <p>着地¥4.76Mで、予算¥5.0Mの95.3%（¥0.24M不足）です。Official店は7月¥7.58M、8月¥5.29M、9月は累計¥4.60Mと下がってきています。</p>
+      <h3>自社ECだけ予算に届きませんでした</h3>
+      <p>実績¥4.88Mで、予算¥5.0Mの97.7%（¥0.12M不足）です。Official店は7月¥7.58M、8月¥5.29M、9月¥4.88Mと下がってきています。</p>
       <p class="act">10月予算は¥5.1Mに上がるため、自社EC向けの施策が必要か確認します。</p>
     </li>
     <li>
       <h3>toB既存は予算どおりです</h3>
-      <p>SPICのコダワリが¥4.41Mで、toB既存の累計は¥4.60Mです。着地は¥4.77M（103.6%）ですが、toBは月末の出荷次第で数字が動きます。医療・非医療の内訳は、店舗別の集計では分けられていません。</p>
-      <p class="act">月末のtoB出荷を確認し、内訳は別途出します。</p>
+      <p>SPICのコダワリが¥4.61M（8月比+22.0%）で、toB既存は¥4.80M（104.4%）でした。医療・非医療の内訳は、店舗別の集計では分けられていません。</p>
+      <p class="act">内訳は別途出します。</p>
     </li>
     <li>
       <h3>10月に向けては、8〜9月の水準を保てるかがポイントです</h3>
-      <p>9月の受注累計は¥12.36Mで、前月の同じ期間（¥11.36M）より8.8%多くなっています。一方、直近4週の出荷は前の4週の76%で、7月が突出していたため落ち着いた形です。8〜9月は月¥12M台で安定しています。</p>
+      <p>7月の¥15.02Mが突出していて、8月は¥12.00M、9月は¥12.63M（8月比+5.2%）と月¥12M台で安定しています。</p>
       <p class="act">10月予算¥11.9Mは、この水準を保てれば届きます。月初に進捗を確認します。</p>
     </li>
   </ul>
@@ -328,7 +393,7 @@ p, li, h1, h2, h3 { overflow-wrap: anywhere; }
   <div class="foot">
     <p>集計条件：MINERALionタグの商品、出荷日ベース、税抜、キャンセルとテスト・社販ショップは除外しています。4〜5月は予算表の実績値、6月以降はBigQuery（spic-core）の出荷集計です。</p>
     <p>チャネル区分：自社EC＝Lypo-C Official、モール＝楽天・Amazon・Yahoo・Qoo10・au PAY・Consumerほか、toB既存＝SPICのコダワリ・エクスチェンジ・Exclusive Shopify。4月の実績が予算表と一致することを確認しています。</p>
-    <p>着地見込：9/30（水）の出荷を直近3か月の曜日別指数で加算した簡易予測です。月末のtoB出荷と、9月下旬の連休の影響は補正していません。</p>
+    <p>9月の数字は9/30出荷分まで反映した時点の実績です。出荷データは後から反映される分があり、この後わずかに変わる場合があります。</p>
   </div>
 
 </div>
