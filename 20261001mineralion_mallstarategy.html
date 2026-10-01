@@ -1,0 +1,1040 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name=robots content="noindex, nofollow"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>MINERALion モール戦略ダッシュボード</title>
+<style>
+/*
+  Layout concept: not a slide deck — a horizontally scrolling website.
+  Three tabs each load their own filmstrip of full-viewport panels;
+  wheel/trackpad/swipe/arrow-keys move sideways through them, with a thin
+  progress rule instead of any slide-control chrome. Flat color fields
+  (white / navy / pale tint), generous padding, no cards/shadows/borders —
+  MINERALion's own "SMART & NEXT": restraint over decoration.
+*/
+:root{
+  --bg:#F4F5F6;
+  --bg-tint:#E9F2FF;
+  --navy:#0033AD;
+  --navy-deep:#001F6B;
+  --ink:#141414;
+  --ink-soft:#585858;
+  --line:#DCE0E0;
+  --surface:#FFFFFF;
+  --on-navy:#FFFFFF;
+  --warn-tint:#F7ECEC;
+  --warn:#B23A3A;
+  --good:#1E7A4C;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0A0D13; --bg-tint:#121A2C; --navy:#5C86FF; --navy-deep:#DCE6FF; --ink:#EDEEF0;
+    --ink-soft:#A7ADB8; --line:#262C3A; --surface:#12161F; --on-navy:#0A0D13;
+    --warn-tint:#231616; --warn:#E08A8A; --good:#4FBE85;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0A0D13; --bg-tint:#121A2C; --navy:#5C86FF; --navy-deep:#DCE6FF; --ink:#EDEEF0;
+  --ink-soft:#A7ADB8; --line:#262C3A; --surface:#12161F; --on-navy:#0A0D13;
+  --warn-tint:#231616; --warn:#E08A8A; --good:#4FBE85;
+}
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
+
+*{box-sizing:border-box;}
+html,body{height:100%; overscroll-behavior:none;}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Yu Gothic Medium","YuGothic","游ゴシック Medium","游ゴシック",Meiryo,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column;
+  height:100dvh; overflow:hidden;
+  word-break:keep-all; overflow-wrap:break-word; line-break:strict;
+}
+.num,.eyebrow,.count,.tabname .en,.kpi-num,.counter,.tab-idx,.scrollhint{ font-family:"Instrument Sans","Helvetica Neue",Helvetica,Arial,sans-serif; }
+.tabular{ font-variant-numeric:tabular-nums; }
+img{ max-width:100%; display:block; }
+button{ font:inherit; background:none; border:none; color:inherit; cursor:pointer; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
+
+/* ---------------- Top bar ---------------- */
+.topbar{
+  flex:none; display:flex; align-items:center; gap:clamp(16px,3vw,40px);
+  padding:14px clamp(18px,4vw,40px); background:var(--surface); border-bottom:1px solid var(--line);
+  z-index:30;
+}
+.brand{ display:flex; align-items:center; gap:10px; }
+.brand-logo{ height:16px; width:auto; }
+.brand-date{ font-size:10.5px; color:var(--ink-soft); letter-spacing:.06em; }
+.tabs{ display:flex; gap:clamp(18px,3vw,36px); margin-left:auto; overflow-x:auto; }
+.tabbtn{ padding:4px 0; display:flex; flex-direction:column; gap:2px; white-space:nowrap; opacity:.5; transition:opacity .2s; border-bottom:2px solid transparent; }
+.tabbtn .jp{ font-size:13.5px; font-weight:600; }
+.tabbtn .en{ font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); }
+.tabbtn.active{ opacity:1; border-bottom-color:var(--navy); }
+.tabbtn.active .jp{ color:var(--navy); }
+.tabbtn:hover{ opacity:1; }
+
+.rule{ flex:none; height:2px; background:var(--line); position:relative; }
+.rule i{ position:absolute; inset:0; width:0%; background:var(--navy); transition:width .15s linear; }
+
+/* ---------------- Horizontal scroller ---------------- */
+.decks{ position:relative; flex:1; min-height:0; }
+.hscroll{
+  display:none; height:100%; width:100%;
+  overflow-x:auto; overflow-y:hidden;
+  scroll-snap-type:x mandatory; scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+}
+.hscroll.active{ display:flex; }
+.hscroll::-webkit-scrollbar{ display:none; }
+
+.panel{
+  flex:0 0 100%; width:100%; height:100%;
+  scroll-snap-align:start;
+  overflow-y:auto; overflow-x:hidden;
+  background:var(--surface);
+  border-right:1px solid var(--bg);
+}
+.panel.navy{ background:var(--navy); color:#fff; }
+.panel.tint{ background:var(--bg-tint); }
+.panel.warn{ background:var(--warn-tint); }
+.panel-inner{ min-height:100%; display:flex; flex-direction:column; justify-content:center; padding:clamp(28px,7vh,64px) clamp(22px,6vw,80px); }
+.panel-body{ max-width:980px; width:100%; margin:0 auto; }
+
+.eyebrow{ font-size:11.5px; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--navy); margin-bottom:14px; }
+.panel.navy .eyebrow{ color:#B9CBFF; }
+h1.ptitle{ font-size:clamp(22px,3.4vw,38px); font-weight:600; line-height:1.32; letter-spacing:.005em; text-wrap:balance; margin:0 0 10px; }
+.psub{ font-size:clamp(13px,1vw,15px); color:var(--ink-soft); max-width:58ch; line-height:1.7; margin:0 0 clamp(20px,4vh,40px); }
+.panel.navy .psub{ color:rgba(255,255,255,.75); }
+
+.reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+.seen .reveal{ opacity:1; transform:translateY(0); }
+.reveal:nth-child(1){transition-delay:.02s}.reveal:nth-child(2){transition-delay:.09s}
+.reveal:nth-child(3){transition-delay:.16s}.reveal:nth-child(4){transition-delay:.23s}
+.reveal:nth-child(5){transition-delay:.30s}.reveal:nth-child(6){transition-delay:.37s}
+
+/* ---- Cover ---- */
+.cover{ padding:0; position:relative; }
+.cover-media{ position:absolute; inset:0; background-size:cover; background-position:center; }
+.cover-scrim{ position:absolute; inset:0; background:linear-gradient(100deg, rgba(0,15,55,.86) 0%, rgba(0,15,55,.55) 45%, rgba(0,15,55,.25) 100%); }
+.cover .panel-inner{ position:relative; z-index:2; color:#fff; justify-content:flex-end; padding-bottom:clamp(48px,10vh,96px); }
+.cover-logo{ position:absolute; top:clamp(22px,4vh,48px); left:clamp(22px,6vw,80px); height:18px; z-index:2; }
+.cover-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:#B9CBFF; margin-bottom:16px; }
+.cover-title{ font-size:clamp(28px,5vw,54px); font-weight:600; line-height:1.32; letter-spacing:.005em; margin-bottom:20px; max-width:22ch; }
+.cover-meta{ font-size:13px; color:rgba(255,255,255,.8); letter-spacing:.01em; }
+.cover-meta span + span::before{ content:"・"; margin:0 8px; opacity:.5; }
+
+/* ---- Fact / definition list ---- */
+.deflist{ display:flex; flex-direction:column; }
+.deflist .row{ display:grid; grid-template-columns:140px 1fr; gap:20px; padding:14px 0; border-top:1px solid var(--line); }
+.deflist .row:last-child{ border-bottom:1px solid var(--line); }
+.deflist dt{ font-size:11.5px; color:var(--ink-soft); letter-spacing:.05em; padding-top:2px; }
+.deflist dd{ margin:0; font-size:14px; line-height:1.65; }
+.panel.navy .deflist .row{ border-color:rgba(255,255,255,.2); }
+.panel.navy .deflist dt{ color:rgba(255,255,255,.55); }
+
+/* ---- Strengths (numbered, flat) ---- */
+.strengths{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(18px,3vw,32px) clamp(20px,3vw,36px); }
+.strength{ border-top:1px solid var(--line); padding-top:14px; }
+.strength .sn{ font-family:"Instrument Sans",sans-serif; font-weight:700; font-size:15px; color:var(--navy); margin-bottom:16px; }
+.strength .st{ font-size:13.5px; font-weight:600; margin-bottom:6px; line-height:1.4; }
+.strength .sd{ font-size:11.5px; color:var(--ink-soft); line-height:1.6; }
+
+/* ---- Why-iron footnote ---- */
+.ironwhy{ margin-top:clamp(18px,3.5vh,28px); padding-top:16px; border-top:1px solid var(--line); }
+.iw-label{ font-size:10.5px; font-weight:700; letter-spacing:.08em; color:var(--navy); text-transform:uppercase; margin-bottom:8px; }
+.ironwhy p{ font-size:11.5px; color:var(--ink-soft); line-height:1.75; margin:0; max-width:72ch; }
+
+/* ---- Video link-out card ---- */
+.videocard{ display:flex; align-items:center; gap:14px; margin-top:16px; padding:13px 16px; background:var(--surface); border:1px solid var(--line); text-decoration:none; color:inherit; }
+.videocard:hover{ border-color:var(--navy); }
+.vc-play{ flex:none; width:32px; height:32px; border-radius:50%; background:var(--navy); color:#fff; display:flex; align-items:center; justify-content:center; }
+.vc-play svg{ width:15px; height:15px; }
+.vc-body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+.vc-title{ font-size:12px; font-weight:600; line-height:1.45; }
+.vc-meta{ font-size:10.5px; color:var(--ink-soft); }
+.vc-cta{ flex:none; font-size:11px; font-weight:700; color:var(--navy); white-space:nowrap; }
+@media (max-width:600px){ .videocard{ flex-wrap:wrap; } .vc-cta{ margin-left:46px; } }
+
+/* ---- Split (facts + product image) ---- */
+.split{ display:grid; grid-template-columns:1.2fr 0.8fr; gap:clamp(24px,4vw,56px); align-items:center; }
+.split-media img{ max-height:min(300px,42vh); margin:0 auto; filter:drop-shadow(0 20px 34px rgba(0,20,60,.16)); }
+
+/* ---- KPI numerals (no cards) ---- */
+.kpis{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(20px,4vw,48px); }
+.kpi{ border-top:1px solid var(--line); padding-top:16px; }
+.kpi-label{ font-size:11.5px; color:var(--ink-soft); margin-bottom:10px; }
+.kpi-num{ font-size:clamp(30px,5vw,50px); font-weight:700; color:var(--navy); line-height:1; letter-spacing:-.01em; }
+.kpi-num.warn{ color:var(--warn); }
+.kpi-num small{ font-size:14px; font-weight:500; color:var(--ink-soft); margin-left:3px; }
+.kpi-note{ font-size:12px; color:var(--ink-soft); margin-top:10px; line-height:1.55; }
+
+/* ---- Chart ---- */
+.chart svg{ display:block; width:100%; height:auto; overflow:visible; }
+.bar{ transform-origin:bottom; transform:scaleY(0); transition:transform 1s cubic-bezier(.2,.8,.2,1); }
+.seen .bar{ transform:scaleY(1); }
+.bar:nth-child(2){transition-delay:.07s}.bar:nth-child(3){transition-delay:.14s}
+.bar:nth-child(4){transition-delay:.21s}.bar:nth-child(5){transition-delay:.28s}.bar:nth-child(6){transition-delay:.35s}
+.chart-cap{ font-size:12px; color:var(--ink-soft); margin-top:18px; }
+
+/* ---- Evidence / stat callout ---- */
+.stat-big{ font-family:"Instrument Sans",sans-serif; font-weight:700; color:var(--warn); font-size:clamp(48px,9vw,96px); line-height:1; letter-spacing:-.02em; }
+.quote{ font-size:12.5px; color:var(--ink-soft); margin:18px 0; line-height:1.7; padding-top:14px; border-top:1px solid var(--line); }
+
+/* ---- Row list (目指す状態) ---- */
+.rowlist .row{ display:grid; grid-template-columns:130px 1fr; gap:16px; padding:13px 0; border-top:1px solid var(--line); }
+.rowlist .row:last-child{ border-bottom:1px solid var(--line); }
+.rowlist .k{ font-size:12.5px; font-weight:600; color:var(--navy); }
+.rowlist .v{ font-size:13.5px; line-height:1.6; }
+.rowlist .v .sub{ display:block; color:var(--ink-soft); font-size:11.5px; margin-top:3px; }
+
+.two-col{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,5vw,64px); }
+
+/* ---- Issue (numbered, navy panel) ---- */
+.issue-num{ font-family:"Instrument Sans",sans-serif; font-weight:700; font-size:clamp(15px,1.4vw,18px); opacity:.65; margin-bottom:14px; letter-spacing:.05em; }
+.issue-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,40px); margin:clamp(20px,4vh,36px) 0; }
+.issue-label{ font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; opacity:.6; margin-bottom:8px; }
+.issue-text{ font-size:13.5px; line-height:1.65; }
+.issue-ask{ padding-top:18px; border-top:1px solid rgba(255,255,255,.25); font-size:15px; font-weight:500; line-height:1.6; }
+
+/* ---- Status list (minutes) ---- */
+.status{ list-style:none; padding:0; margin:0; }
+.status li{ font-size:12.5px; padding:7px 0; border-top:1px solid var(--line); position:relative; padding-left:16px; }
+.status li:last-child{ border-bottom:1px solid var(--line); }
+.status li::before{ content:""; position:absolute; left:0; top:14px; width:7px; height:1px; background:var(--navy); }
+.status li.done::before{ background:var(--good); width:9px; }
+.done-tag{ font-family:"Instrument Sans",sans-serif; font-size:9.5px; font-weight:700; color:var(--good); letter-spacing:.08em; margin-left:8px; }
+
+/* ---- Strategy reject / adopt ---- */
+.strategy2{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,40px); }
+.strategy2 .card{ border-top:1px solid var(--line); padding-top:16px; }
+.stag{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:12px; display:block; }
+.strategy2 .reject .stag{ color:var(--ink-soft); }
+.strategy2 .adopt .stag{ color:var(--navy); }
+.strategy2 h3{ font-size:15px; font-weight:600; margin:0 0 8px; }
+.strategy2 .reject h3{ color:var(--ink-soft); text-decoration:line-through; text-decoration-thickness:1px; }
+.strategy2 p{ font-size:12.5px; color:var(--ink-soft); line-height:1.65; margin:0; }
+
+/* ---- Mall / action columns ---- */
+.cols4{ display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(14px,2.4vw,24px); }
+.cols3{ display:grid; grid-template-columns:repeat(3,1fr); gap:clamp(14px,2.4vw,24px); }
+.mcard{ border-top:1px solid var(--line); padding-top:14px; }
+.mcard .badge{ font-size:9.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--navy); display:block; margin-bottom:10px; }
+.mcard .badge.gray{ color:var(--ink-soft); }
+.mcard .mn{ font-family:"Instrument Sans",sans-serif; font-weight:700; font-size:15px; margin-bottom:5px; }
+.mcard .mr{ font-size:11.5px; font-weight:600; margin-bottom:8px; }
+.mcard .mb{ font-size:11.5px; color:var(--ink-soft); line-height:1.6; }
+.acard .an{ font-size:12.5px; font-weight:700; color:var(--navy); margin-bottom:8px; }
+.acard .an small{ color:var(--ink-soft); font-weight:500; margin-left:6px; }
+.acard ul{ list-style:none; padding:0; margin:0; }
+.acard li{ font-size:11.5px; padding:4px 0 4px 12px; position:relative; line-height:1.55; }
+.acard li::before{ content:""; position:absolute; left:0; top:10px; width:5px; height:1px; background:var(--navy); }
+
+/* ---- Table ---- */
+.tblwrap{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; font-size:12.5px; min-width:400px; }
+th,td{ text-align:right; padding:10px 8px; border-top:1px solid var(--line); white-space:nowrap; }
+th:first-child, td:first-child{ text-align:left; }
+th{ font-weight:600; color:var(--ink-soft); font-size:10.5px; letter-spacing:.04em; }
+tbody tr:last-child td{ border-bottom:1px solid var(--line); }
+
+/* ---- Bridge rows ---- */
+.bridge .row{ display:grid; grid-template-columns:1fr 22px 1fr; gap:12px; align-items:center; padding:13px 0; border-top:1px solid var(--line); }
+.bridge .row:last-of-type{ border-bottom:1px solid var(--line); }
+.bridge .then, .bridge .now{ font-size:12.5px; line-height:1.55; }
+.bridge .then{ color:var(--ink-soft); }
+.bridge .arrow{ text-align:center; color:var(--navy); font-weight:700; }
+.bridge .tag{ font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--navy); display:block; margin-bottom:3px; }
+.seal{ display:flex; align-items:center; gap:10px; margin-top:22px; }
+.seal img{ width:30px; height:30px; border-radius:50%; object-fit:cover; }
+.seal span{ font-size:11px; color:var(--ink-soft); }
+
+/* ---------------- Chrome: progress / counter / chevrons ---------------- */
+.hud{ position:fixed; right:clamp(16px,3vw,32px); bottom:clamp(14px,3vh,26px); z-index:25; display:flex; align-items:center; gap:10px; }
+.hud .counter{ font-size:11px; color:var(--ink-soft); background:var(--surface); padding:4px 9px; border-radius:2px; border:1px solid var(--line); }
+
+.chev{ position:fixed; top:50%; transform:translateY(-50%); z-index:25; width:40px; height:40px; display:none; align-items:center; justify-content:center; color:var(--ink-soft); opacity:.55; transition:opacity .2s; }
+.chev:hover{ opacity:1; color:var(--navy); }
+.chev.left{ left:8px; } .chev.right{ right:8px; }
+.chev svg{ width:20px; height:20px; }
+@media (hover:hover) and (pointer:fine){ .chev{ display:flex; } }
+
+.scrollhint{ position:absolute; right:clamp(22px,6vw,80px); bottom:clamp(28px,7vh,64px); z-index:2; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.7); display:flex; align-items:center; gap:8px; }
+.scrollhint svg{ width:14px; height:14px; animation:nudge 1.6s ease-in-out infinite; }
+@keyframes nudge{ 0%,100%{ transform:translateX(0); opacity:.6;} 50%{ transform:translateX(6px); opacity:1;} }
+
+@media (max-width:760px){
+  .tabs{ gap:16px; }
+  .split{ grid-template-columns:1fr; }
+  .split-media{ order:-1; margin-bottom:8px; }
+  .split-media img{ max-height:150px; }
+  .strengths{ grid-template-columns:repeat(2,1fr); }
+  .kpis{ grid-template-columns:1fr; gap:22px; }
+  .two-col,.strategy2{ grid-template-columns:1fr; gap:24px; }
+  .issue-grid{ grid-template-columns:1fr; }
+  .cols4{ grid-template-columns:1fr 1fr; }
+  .cols3{ grid-template-columns:1fr 1fr; }
+  .cover-title{ max-width:none; }
+  .bridge .row{ grid-template-columns:1fr; text-align:left; }
+  .bridge .arrow{ display:none; }
+  .scrollhint{ display:none; }
+}
+@media (max-width:420px){
+  .strengths,.cols4,.cols3{ grid-template-columns:1fr; }
+}
+@media (max-height:560px){
+  .panel-inner{ justify-content:flex-start; padding-top:28px; }
+}
+</style>
+
+<div class="topbar">
+  <div class="brand">
+    <img class="brand-logo" src="assets/logo_navy.webp" alt="MINERALion">
+    <span class="brand-date tabular">2026.10.01</span>
+  </div>
+  <div class="tabs">
+    <button class="tabbtn active" data-tab="rakuten"><span class="jp">楽天市場</span><span class="en">Rakuten Briefing</span></button>
+    <button class="tabbtn" data-tab="amazon"><span class="jp">Amazon</span><span class="en">Amazon Briefing</span></button>
+    <button class="tabbtn" data-tab="minutes"><span class="jp">戦略の系譜</span><span class="en">05.13 Minutes</span></button>
+  </div>
+</div>
+<div class="rule"><i></i></div>
+
+<div class="decks">
+
+  <!-- ============================= RAKUTEN ============================= -->
+  <div class="hscroll active" id="deck-rakuten">
+
+    <section class="panel cover">
+      <div class="cover-media" style="background-image:url('assets/scene_p26.jpg')"></div>
+      <div class="cover-scrim"></div>
+      <img class="cover-logo" src="assets/logo_white.webp" alt="MINERALion">
+      <div class="panel-inner">
+        <div class="panel-body">
+          <div class="cover-eyebrow">Partner Briefing — 楽天市場コンサルティング</div>
+          <h1 class="cover-title">楽天市場<br>チャネル戦略ブリーフィング</h1>
+          <div class="cover-meta"><span>2026年10月1日</span><span>株式会社スピック　宮崎直哉</span><span>所要時間30分（説明15・質疑15）</span></div>
+        </div>
+      </div>
+      <div class="scrollhint">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">01 / Why Mall</div>
+        <h1 class="ptitle reveal">なぜ今、楽天市場に出るのか</h1>
+        <p class="psub reveal">今日ご相談したいことは、すべてこの前提から始まります。</p>
+        <div class="deflist">
+          <div class="row reveal"><dt>01</dt><dd>検索・比較・購入がモールの中で完結する時代。公式サイトだけでは商機とタッチポイントを取りこぼす。</dd></div>
+          <div class="row reveal"><dt>02</dt><dd>出店の目的は「値引きで一時的に売る」ことではなく、新しいタッチポイントを作り、顧客基盤として育てること。</dd></div>
+          <div class="row reveal"><dt>03</dt><dd>最重要視するのはレビューの構築・定期便の促進（継続習慣＝顧客の成功）・再購入の促進の3つ。</dd></div>
+          <div class="row reveal"><dt>04</dt><dd>ジャンル最上位は目的ではなく、結果。上記3つの先に位置づける。</dd></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">02 / The Brand</div>
+        <h1 class="ptitle reveal">MINERALionとは</h1>
+        <div class="split">
+          <div class="deflist reveal">
+            <div class="row"><dt>起源</dt><dd>THEMAROX™（阿武隈山系の風化花崗岩）。50年の原料史</dd></div>
+            <div class="row"><dt>形状</dt><dd>10g×30包、約1ヶ月分</dd></div>
+            <div class="row"><dt>鉄分量</dt><dd>約5,350μg／包</dd></div>
+            <div class="row"><dt>位置づけ</dt><dd>食品。効能効果は標榜せず（薬機法）</dd></div>
+          </div>
+          <div class="split-media reveal"><img src="assets/product_box.webp" alt="MINERALion 30包入りボックス"></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel tint">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">02 / The Brand</div>
+        <h1 class="ptitle reveal">MINERALionの凄み</h1>
+        <p class="psub reveal">市場で戦える理由を、最小限に。</p>
+        <div class="strengths">
+          <div class="strength reveal"><div class="sn">01</div><div class="st">THEMAROXの凄み</div><div class="sd">イオン化という「吸収設計」と、液状という新しいサプリメンテーション</div></div>
+          <div class="strength reveal"><div class="sn">02</div><div class="st">「鉄」に訴求を集中</div><div class="sd">数十種類の多様なミネラルを含みながら、検索・競合の薄い「鉄」に絞って戦う</div></div>
+          <div class="strength reveal"><div class="sn">03</div><div class="st">Lypo-C基盤</div><div class="sd">実証済みアップセルを横展開</div></div>
+          <div class="strength reveal"><div class="sn">04</div><div class="st">卸3,500拠点は既に稼働中</div><div class="sd">年間約4,508万円の実売上（Lypo-C実績）。MINERALionにはまだ伸びしろ</div></div>
+          <div class="strength reveal"><div class="sn">05</div><div class="st">高いリピート実績</div><div class="sd">自社EC中心の全体で65.1%（26.05時点）。楽天市場単体は稼働半年で34.8%（26.09）、これから伸ばす段階</div></div>
+          <div class="strength reveal"><div class="sn">06</div><div class="st">口コミでの定期的なバズ</div><div class="sd">第三者チャンネルでの紹介が継続的に発生</div></div>
+        </div>
+        <div class="ironwhy reveal">
+          <div class="iw-label">なぜ「鉄」に絞ったのか</div>
+          <p>鉄摂取量は1975年13.4mg→2020年7.6mg（厚労省調べ、約43%減）。就労世代女性の平均摂取量は7.2mgで推奨10〜10.5mgに届かず、最大49%が鉄不足という推計もある。「ミネラル」全体は競合過多だが、実需の大きさに対して検索・訴求の競合が薄い「鉄」は数少ない勝ち筋。</p>
+        </div>
+        <a class="videocard reveal" href="https://youtu.be/Ttb-1FEtIIg?si=Xs4BGwAaAz0ud_K1&amp;t=624" target="_blank" rel="noopener">
+          <span class="vc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="vc-body">
+            <span class="vc-title">【鉄不足】健康診断では見落とされる…健康のために飲む鉄剤が腸を壊していた…</span>
+            <span class="vc-meta">【下川先生】の菌ケア大学（登録7.21万人）・1.1万回視聴　ほか複数の第三者チャンネルでも紹介実績あり</span>
+          </span>
+          <span class="vc-cta">YouTubeで見る →</span>
+        </a>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">03 / Results</div>
+        <h1 class="ptitle reveal">楽天市場における実績</h1>
+        <p class="psub reveal">2026年4月開始、本日で半年。立ち上がりは順調。</p>
+        <div class="kpis">
+          <div class="kpi reveal"><div class="kpi-label">半年間の成長（4→9月）</div><div class="kpi-num"><span class="count" data-target="4.8" data-decimals="1">0</span><small>倍</small></div><div class="kpi-note">月商¥294,250→¥1,414,768（税抜）</div></div>
+          <div class="kpi reveal"><div class="kpi-label">定期購入比率</div><div class="kpi-num"><span class="count" data-target="14.5" data-decimals="1">0</span><small>%</small></div><div class="kpi-note">全921件中134件が定期購入</div></div>
+          <div class="kpi reveal"><div class="kpi-label">リピート顧客率</div><div class="kpi-num"><span class="count" data-target="34.8" data-decimals="1">0</span><small>%</small></div><div class="kpi-note">購入者554人中193人が2回目以降</div></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">03 / Results</div>
+        <h1 class="ptitle reveal">月次売上の推移（税抜）</h1>
+        <div class="chart reveal">
+          <svg viewBox="0 0 640 230" role="img" aria-label="楽天市場の月次売上推移。4月29万円から9月141万円まで、ほぼ一貫して増加。">
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="40" y1="190" x2="600" y2="190"></line>
+              <line x1="40" y1="145" x2="600" y2="145"></line>
+              <line x1="40" y1="100" x2="600" y2="100"></line>
+              <line x1="40" y1="55" x2="600" y2="55"></line>
+              <line x1="40" y1="10" x2="600" y2="10"></line>
+            </g>
+            <g fill="var(--navy)">
+              <rect class="bar" x="55"  y="152.5" width="62" height="37.5"></rect>
+              <rect class="bar" x="147" y="132.4" width="62" height="57.6"></rect>
+              <rect class="bar" x="239" y="73.7"  width="62" height="116.3"></rect>
+              <rect class="bar" x="331" y="42.5"  width="62" height="147.5"></rect>
+              <rect class="bar" x="423" y="54.3"  width="62" height="135.7"></rect>
+              <rect class="bar" x="515" y="10"    width="62" height="180"></rect>
+            </g>
+            <g fill="var(--ink)" font-family="Instrument Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle">
+              <text x="86" y="146">29万</text><text x="178" y="126">45万</text><text x="270" y="67">91万</text>
+              <text x="362" y="36">116万</text><text x="454" y="48">107万</text><text x="546" y="4">141万</text>
+            </g>
+            <g fill="var(--ink-soft)" font-family="Instrument Sans, sans-serif" font-size="11" text-anchor="middle">
+              <text x="86" y="210">4月</text><text x="178" y="210">5月</text><text x="270" y="210">6月</text>
+              <text x="362" y="210">7月</text><text x="454" y="210">8月</text><text x="546" y="210">9月</text>
+            </g>
+          </svg>
+        </div>
+        <p class="chart-cap reveal">参考：同期間の自社ECはAOV¥7,163／点数1.53点、楽天市場はAOV¥6,020／点数1.14点。</p>
+      </div></div>
+    </section>
+
+    <section class="panel warn">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal" style="color:var(--warn)">気になっている点</div>
+        <h1 class="ptitle reveal">商品名・訴求が割引主導になっている</h1>
+        <div class="stat-big reveal"><span class="count" data-target="67">0</span>%</div>
+        <p class="psub reveal" style="margin-top:8px;">の購入が「期間限定◯%OFFクーポン」等を商品名に含むバージョン経由（明細ベース）</p>
+        <div class="quote reveal">例：「＼期間限定10%OFF！／【Lypo-C公式】新発売 ミネラリオン MINERALion 30包入×1箱 …」</div>
+        <p class="reveal" style="font-size:13px;margin:0;">値引きとブランディングは逆方向の力。楽天のアルゴリズムを損なわずにどう変えるか、ご相談したいポイントです。</p>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">04 / Operating Model</div>
+        <h1 class="ptitle reveal">目指す状態と運用原則</h1>
+        <div class="two-col">
+          <div class="rowlist reveal">
+            <div class="row"><span class="k">レビュー構築</span><span class="v">4包トライアルを規約内でどう活かすか</span></div>
+            <div class="row"><span class="k">定期便促進</span><span class="v">継続＝顧客の成功という前提<span class="sub">売上目的ではない</span></span></div>
+            <div class="row"><span class="k">再購入促進</span><span class="v">単発購入者の再購入を後押し</span></div>
+            <div class="row"><span class="k">カテゴリ最上位</span><span class="v">上記3つの結果として狙う</span></div>
+          </div>
+          <div class="deflist reveal">
+            <div class="row"><dt>薬機法</dt><dd>効能効果は標榜しない</dd></div>
+            <div class="row"><dt>非ディスカウント</dt><dd>値引きとブランディングは真逆</dd></div>
+            <div class="row"><dt>媒体規約</dt><dd>景品表示法・レビュー規約を遵守</dd></div>
+            <div class="row"><dt>KPI・KGI共同運用</dt><dd>月次でチューニングする体制</dd></div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel navy">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="issue-num reveal">Issue 01 / 03</div>
+        <h1 class="ptitle reveal">商品名・訴求が割引主導になっている</h1>
+        <div class="issue-grid">
+          <div class="reveal"><div class="issue-label">根拠</div><div class="issue-text">販売実績の約67%が割引訴求入りの商品名で購入</div></div>
+          <div class="reveal"><div class="issue-label">相談したいこと</div><div class="issue-text">割引を外しても検索順位・転換率を落とさない設計</div></div>
+        </div>
+        <div class="issue-ask reveal">問い：値引きに頼らず楽天で見つけてもらう方法は何か。</div>
+      </div></div>
+    </section>
+
+    <section class="panel navy">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="issue-num reveal">Issue 02 / 03</div>
+        <h1 class="ptitle reveal">定期便比率14.5%を、顧客の成功の入り口に</h1>
+        <div class="issue-grid">
+          <div class="reveal"><div class="issue-label">根拠</div><div class="issue-text">定期134件／全921件。購入者554人中、定期経験者は一部</div></div>
+          <div class="reveal"><div class="issue-label">相談したいこと</div><div class="issue-text">4包トライアルを定期転換のフックにする設計案</div></div>
+        </div>
+        <div class="issue-ask reveal">問い：「継続できている状態」を軸に、楽天上で何を変えるべきか。</div>
+      </div></div>
+    </section>
+
+    <section class="panel navy">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="issue-num reveal">Issue 03 / 03</div>
+        <h1 class="ptitle reveal">レビュー基盤が未整備なまま購入母数だけ増加</h1>
+        <div class="issue-grid">
+          <div class="reveal"><div class="issue-label">根拠</div><div class="issue-text">月間200件前後の購入があるがレビュー転換の設計がない</div></div>
+          <div class="reveal"><div class="issue-label">相談したいこと</div><div class="issue-text">景品表示法・ステマ規制内でのレビュー増加策</div></div>
+        </div>
+        <div class="issue-ask reveal">問い：薬機法とレビュー規約を両立させる設計とは。</div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">05 / Reference</div>
+        <h1 class="ptitle reveal">参考データ（質疑用）</h1>
+        <div class="tblwrap reveal">
+          <table>
+            <thead><tr><th>月</th><th>売上（税抜）</th><th>受注件数</th></tr></thead>
+            <tbody>
+              <tr><td>2026年4月</td><td class="tabular">¥294,250</td><td class="tabular">53</td></tr>
+              <tr><td>2026年5月</td><td class="tabular">¥452,606</td><td class="tabular">80</td></tr>
+              <tr><td>2026年6月</td><td class="tabular">¥914,036</td><td class="tabular">153</td></tr>
+              <tr><td>2026年7月</td><td class="tabular">¥1,158,528</td><td class="tabular">197</td></tr>
+              <tr><td>2026年8月</td><td class="tabular">¥1,066,236</td><td class="tabular">190</td></tr>
+              <tr><td>2026年9月</td><td class="tabular">¥1,414,768</td><td class="tabular">235</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="chart-cap reveal">出所：楽天RMS連携データ（受注日ベース、キャンセル除外、税抜）。作成：宮崎直哉。</p>
+      </div></div>
+    </section>
+
+    <section class="panel tint">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">06 / Discussion</div>
+        <h1 class="ptitle reveal">今後の議論のポイント</h1>
+        <p class="psub reveal">上記3つの課題とは別に、楽天市場側の潮流を踏まえた論点。</p>
+        <div class="rowlist">
+          <div class="row reveal"><span class="k">RPP自動最適化</span><span class="v">2026年、予算配分・適用CPCが自動最適化される仕様へ移行。手動入札の勝ちパターンが通用しにくくなる前提での運用設計が必要<span class="sub">定期購入比率の高い商材はROAS 200〜300%を目安に継続投資する運用が一般的</span></span></div>
+          <div class="row reveal"><span class="k">検索順位の9割は商品名設計</span><span class="v">楽天SEOは「商品名×商品属性情報（タグID）×カテゴリ」でほぼ決まる仕組み<span class="sub">割引表記を外した後、商品名・タグをどう再設計して検索順位を維持するか</span></span></div>
+          <div class="row reveal"><span class="k">総合力評価へのシフト</span><span class="v">キーワード詰め込みより、売上実績・配送品質など店舗全体の総合力が評価される流れ<span class="sub">単発施策より、運用の継続性そのものが問われる</span></span></div>
+        </div>
+      </div></div>
+    </section>
+
+  </div>
+
+  <!-- ============================= AMAZON ============================= -->
+  <div class="hscroll" id="deck-amazon">
+
+    <section class="panel cover">
+      <div class="cover-media" style="background-image:url('assets/scene_p26.jpg')"></div>
+      <div class="cover-scrim"></div>
+      <img class="cover-logo" src="assets/logo_white.webp" alt="MINERALion">
+      <div class="panel-inner">
+        <div class="panel-body">
+          <div class="cover-eyebrow">Partner Briefing — Amazonコンサルティング</div>
+          <h1 class="cover-title">Amazon<br>チャネル戦略ブリーフィング</h1>
+          <div class="cover-meta"><span>2026年10月1日</span><span>株式会社スピック　宮崎直哉</span><span>所要時間30分（説明15・質疑15）</span></div>
+        </div>
+      </div>
+      <div class="scrollhint">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">01 / Why Mall</div>
+        <h1 class="ptitle reveal">なぜ今、Amazonに出るのか</h1>
+        <p class="psub reveal">今日ご相談したいことは、すべてこの前提から始まります。</p>
+        <div class="deflist">
+          <div class="row reveal"><dt>01</dt><dd>検索・比較・購入がモールの中で完結する時代。公式サイトだけでは商機とタッチポイントを取りこぼす。</dd></div>
+          <div class="row reveal"><dt>02</dt><dd>出店の目的は「値引きで一時的に売る」ことではなく、新しいタッチポイントを作り、顧客基盤として育てること。</dd></div>
+          <div class="row reveal"><dt>03</dt><dd>最重要視するのはレビューの構築・定期便の促進（継続習慣＝顧客の成功）・再購入の促進の3つ。</dd></div>
+          <div class="row reveal"><dt>04</dt><dd>カテゴリ最上位は目的ではなく、結果。上記3つの先に位置づける。</dd></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">02 / The Brand</div>
+        <h1 class="ptitle reveal">MINERALionとは</h1>
+        <div class="split">
+          <div class="deflist reveal">
+            <div class="row"><dt>起源</dt><dd>THEMAROX™（阿武隈山系の風化花崗岩）。50年の原料史</dd></div>
+            <div class="row"><dt>形状</dt><dd>10g×30包、約1ヶ月分</dd></div>
+            <div class="row"><dt>鉄分量</dt><dd>約5,350μg／包</dd></div>
+            <div class="row"><dt>位置づけ</dt><dd>食品。効能効果は標榜せず（薬機法）</dd></div>
+          </div>
+          <div class="split-media reveal"><img src="assets/product_box.webp" alt="MINERALion 30包入りボックス"></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel tint">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">02 / The Brand</div>
+        <h1 class="ptitle reveal">MINERALionの凄み</h1>
+        <p class="psub reveal">市場で戦える理由を、最小限に。</p>
+        <div class="strengths">
+          <div class="strength reveal"><div class="sn">01</div><div class="st">THEMAROXの凄み</div><div class="sd">イオン化という「吸収設計」と、液状という新しいサプリメンテーション</div></div>
+          <div class="strength reveal"><div class="sn">02</div><div class="st">「鉄」に訴求を集中</div><div class="sd">数十種類の多様なミネラルを含みながら、検索・競合の薄い「鉄」に絞って戦う</div></div>
+          <div class="strength reveal"><div class="sn">03</div><div class="st">Lypo-C基盤</div><div class="sd">実証済みアップセルを横展開</div></div>
+          <div class="strength reveal"><div class="sn">04</div><div class="st">卸3,500拠点の可能性</div><div class="sd">Lypo-Cの実績＝MINERALionが辿れる拡張性</div></div>
+          <div class="strength reveal"><div class="sn">05</div><div class="st">高いリピート実績</div><div class="sd">新ブランドで65.1%（26.05時点）</div></div>
+          <div class="strength reveal"><div class="sn">06</div><div class="st">口コミでの定期的なバズ</div><div class="sd">第三者チャンネルでの紹介が継続的に発生</div></div>
+        </div>
+        <div class="ironwhy reveal">
+          <div class="iw-label">なぜ「鉄」に絞ったのか</div>
+          <p>鉄摂取量は1975年13.4mg→2020年7.6mg（厚労省調べ、約43%減）。就労世代女性の平均摂取量は7.2mgで推奨10〜10.5mgに届かず、最大49%が鉄不足という推計もある。「ミネラル」全体は競合過多だが、実需の大きさに対して検索・訴求の競合が薄い「鉄」は数少ない勝ち筋。</p>
+        </div>
+        <a class="videocard reveal" href="https://youtu.be/Ttb-1FEtIIg?si=Xs4BGwAaAz0ud_K1&amp;t=624" target="_blank" rel="noopener">
+          <span class="vc-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          <span class="vc-body">
+            <span class="vc-title">【鉄不足】健康診断では見落とされる…健康のために飲む鉄剤が腸を壊していた…</span>
+            <span class="vc-meta">【下川先生】の菌ケア大学（登録7.21万人）・1.1万回視聴　ほか複数の第三者チャンネルでも紹介実績あり</span>
+          </span>
+          <span class="vc-cta">YouTubeで見る →</span>
+        </a>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">03 / Results</div>
+        <h1 class="ptitle reveal">Amazonにおける実績</h1>
+        <p class="psub reveal">2026年4月開始、本日で半年。急成長のあと直近2ヶ月は減速。</p>
+        <div class="kpis">
+          <div class="kpi reveal"><div class="kpi-label">半年間の成長（4→9月）</div><div class="kpi-num"><span class="count" data-target="5.7" data-decimals="1">0</span><small>倍</small></div><div class="kpi-note">月商¥187,250→¥1,067,640（税抜）</div></div>
+          <div class="kpi reveal"><div class="kpi-label">7月ピーク比</div><div class="kpi-num warn"><span class="count" data-target="-28" data-decimals="0">0</span><small>%</small></div><div class="kpi-note">2ヶ月連続で減速</div></div>
+          <div class="kpi reveal"><div class="kpi-label">リピート可視化</div><div class="kpi-num warn"><span class="count" data-target="0" data-decimals="0">0</span><small>%</small></div><div class="kpi-note">顧客IDが付与されず追えない</div></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">03 / Results</div>
+        <h1 class="ptitle reveal">月次売上の推移（税抜）</h1>
+        <div class="chart reveal">
+          <svg viewBox="0 0 640 230" role="img" aria-label="Amazonの月次売上推移。4月19万円から7月149万円まで急伸したのち、8月113万円、9月107万円と2ヶ月連続で減速。">
+            <g stroke="var(--line)" stroke-width="1">
+              <line x1="40" y1="190" x2="600" y2="190"></line>
+              <line x1="40" y1="145" x2="600" y2="145"></line>
+              <line x1="40" y1="100" x2="600" y2="100"></line>
+              <line x1="40" y1="55" x2="600" y2="55"></line>
+              <line x1="40" y1="10" x2="600" y2="10"></line>
+            </g>
+            <g fill="var(--navy)">
+              <rect class="bar" x="55"  y="167.4" width="62" height="22.6"></rect>
+              <rect class="bar" x="147" y="125.1" width="62" height="64.9"></rect>
+              <rect class="bar" x="239" y="124.1" width="62" height="65.9"></rect>
+              <rect class="bar" x="331" y="10"    width="62" height="180"></rect>
+              <rect class="bar" x="423" y="53.5"  width="62" height="136.5"></rect>
+              <rect class="bar" x="515" y="60.9"  width="62" height="129.1"></rect>
+            </g>
+            <g fill="var(--ink)" font-family="Instrument Sans, sans-serif" font-size="11" font-weight="600" text-anchor="middle">
+              <text x="86" y="161">19万</text><text x="178" y="119">54万</text><text x="270" y="118">55万</text>
+              <text x="362" y="4">149万</text><text x="454" y="47.5">113万</text><text x="546" y="54.9">107万</text>
+            </g>
+            <g fill="var(--ink-soft)" font-family="Instrument Sans, sans-serif" font-size="11" text-anchor="middle">
+              <text x="86" y="210">4月</text><text x="178" y="210">5月</text><text x="270" y="210">6月</text>
+              <text x="362" y="210">7月</text><text x="454" y="210">8月</text><text x="546" y="210">9月</text>
+            </g>
+          </svg>
+        </div>
+        <p class="chart-cap reveal">参考：同期間の自社ECはAOV¥7,163／点数1.53点、Amazonは9月AOV¥5,649／点数1.09点。</p>
+      </div></div>
+    </section>
+
+    <section class="panel warn">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal" style="color:var(--warn)">気になっている点</div>
+        <h1 class="ptitle reveal">7月をピークに2ヶ月連続で減速</h1>
+        <div class="stat-big reveal"><span class="count" data-target="-28">0</span>%</div>
+        <p class="psub reveal" style="margin-top:8px;">ピーク比。月商¥1,488,719（7月）→¥1,129,011（8月）→¥1,067,640（9月）</p>
+        <div class="quote reveal">加えて、Amazon経由の注文には顧客IDが付与されず、リピート状況も社内データからは見えていません。</div>
+        <p class="reveal" style="font-size:13px;margin:0;">広告効率・在庫・競合出品・レビュー動向のどこに要因があるか、Amazon側データとの突合が必要です。</p>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">04 / Operating Model</div>
+        <h1 class="ptitle reveal">目指す状態と運用原則</h1>
+        <div class="two-col">
+          <div class="rowlist reveal">
+            <div class="row"><span class="k">レビュー構築</span><span class="v">Vine以外はインセンティブ禁止<span class="sub">規約内での4包活用を設計</span></span></div>
+            <div class="row"><span class="k">定期便促進</span><span class="v">継続＝顧客の成功という前提<span class="sub">定期おトク便相当への送客</span></span></div>
+            <div class="row"><span class="k">再購入促進</span><span class="v">継続状況の可視化とあわせて設計</span></div>
+            <div class="row"><span class="k">カテゴリ最上位</span><span class="v">上記3つの結果として狙う</span></div>
+          </div>
+          <div class="deflist reveal">
+            <div class="row"><dt>薬機法</dt><dd>効能効果は標榜しない</dd></div>
+            <div class="row"><dt>非ディスカウント</dt><dd>値引きとブランディングは真逆</dd></div>
+            <div class="row"><dt>媒体規約</dt><dd>インセンティブレビュー禁止を遵守</dd></div>
+            <div class="row"><dt>KPI・KGI共同運用</dt><dd>月次でチューニングする体制</dd></div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel navy">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="issue-num reveal">Issue 01 / 03</div>
+        <h1 class="ptitle reveal">7月をピークに2ヶ月連続で減速</h1>
+        <div class="issue-grid">
+          <div class="reveal"><div class="issue-label">根拠</div><div class="issue-text">月商¥148.9万（7月）→¥112.9万（8月）→¥106.8万（9月）</div></div>
+          <div class="reveal"><div class="issue-label">相談したいこと</div><div class="issue-text">広告・検索順位・レビュー・在庫・競合のどこに要因があるか</div></div>
+        </div>
+        <div class="issue-ask reveal">問い：7月の急伸は何が効いており、8〜9月に失われたものは何か。</div>
+      </div></div>
+    </section>
+
+    <section class="panel navy">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="issue-num reveal">Issue 02 / 03</div>
+        <h1 class="ptitle reveal">リピート・定期便の状況が社内データから見えない</h1>
+        <div class="issue-grid">
+          <div class="reveal"><div class="issue-label">根拠</div><div class="issue-text">Amazon経由注文に顧客IDが付与されず算出不可</div></div>
+          <div class="reveal"><div class="issue-label">相談したいこと</div><div class="issue-text">Brand Analytics等の共有で継続率を一緒に追える体制</div></div>
+        </div>
+        <div class="issue-ask reveal">問い：「継続できている状態」を何を指標に測ればよいか。</div>
+      </div></div>
+    </section>
+
+    <section class="panel navy">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="issue-num reveal">Issue 03 / 03</div>
+        <h1 class="ptitle reveal">規約の制約下でのレビュー基盤とカテゴリ最上位</h1>
+        <div class="issue-grid">
+          <div class="reveal"><div class="issue-label">根拠</div><div class="issue-text">Amazonはインセンティブレビューを厳格に禁止（Vine以外）</div></div>
+          <div class="reveal"><div class="issue-label">相談したいこと</div><div class="issue-text">Vine活用可否、規約に抵触しないレビュー増加策</div></div>
+        </div>
+        <div class="issue-ask reveal">問い：規約と薬機法を両立させる設計とは。</div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">05 / Reference</div>
+        <h1 class="ptitle reveal">参考データ（質疑用）</h1>
+        <div class="tblwrap reveal">
+          <table>
+            <thead><tr><th>月</th><th>売上（税抜）</th><th>受注件数</th></tr></thead>
+            <tbody>
+              <tr><td>2026年4月</td><td class="tabular">¥187,250</td><td class="tabular">35</td></tr>
+              <tr><td>2026年5月</td><td class="tabular">¥537,019</td><td class="tabular">94</td></tr>
+              <tr><td>2026年6月</td><td class="tabular">¥545,412</td><td class="tabular">97</td></tr>
+              <tr><td>2026年7月</td><td class="tabular">¥1,488,719</td><td class="tabular">259</td></tr>
+              <tr><td>2026年8月</td><td class="tabular">¥1,129,011</td><td class="tabular">208</td></tr>
+              <tr><td>2026年9月</td><td class="tabular">¥1,067,640</td><td class="tabular">189</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="chart-cap reveal">出所：NextEngine連携データ（受注日ベース、キャンセル除外、税抜）。顧客ID非付与のためリピート率は算出不可。作成：宮崎直哉。</p>
+      </div></div>
+    </section>
+
+    <section class="panel tint">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">06 / Discussion</div>
+        <h1 class="ptitle reveal">今後の議論のポイント</h1>
+        <p class="psub reveal">上記3つの課題とは別に、Amazon側の潮流を踏まえた論点。</p>
+        <div class="rowlist">
+          <div class="row reveal"><span class="k">AI検索・Rufus対応</span><span class="v">検索アルゴリズムCOSMOとAIショッピングアシスタント（Rufus→Alexa for Shopping）が購買文脈を理解する設計に移行<span class="sub">キーワードの詰め込みより「素材・用途・対象者・使用シーン」まで書き込んだ商品説明が露出に直結</span></span></div>
+          <div class="row reveal"><span class="k">広告の計測方法変更</span><span class="v">広告効果の計測が、ショッピングシグナルを強化したラストタッチアトリビューションへ移行<span class="sub">定期おトク便・レビュー施策が広告貢献度にどう反映されるか、評価方法の見直しが論点</span></span></div>
+          <div class="row reveal"><span class="k">Vineの重要性増大</span><span class="v">サクラレビュー規制の厳格化で、Vineが事実上唯一の合法的レビュー獲得手段に<span class="sub">星3・星2が混ざるのは自然。低評価の内容を商品ページ・同梱物の改善にどう還元するか</span></span></div>
+        </div>
+      </div></div>
+    </section>
+
+  </div>
+
+  <!-- ============================= MINUTES ============================= -->
+  <div class="hscroll" id="deck-minutes">
+
+    <section class="panel cover">
+      <div class="cover-media" style="background-image:url('assets/scene_p26.jpg')"></div>
+      <div class="cover-scrim"></div>
+      <img class="cover-logo" src="assets/logo_white.webp" alt="MINERALion">
+      <div class="panel-inner">
+        <div class="panel-body">
+          <div class="cover-eyebrow">Meeting Minutes — Vol.05.13</div>
+          <h1 class="cover-title">MINERALion<br>モール上陸作戦</h1>
+          <div class="cover-meta"><span>2026年5月13日</span><span>Owner：宮崎直哉</span><span>Rakuten / Amazon / Yahoo / Qoo10</span></div>
+        </div>
+      </div>
+      <div class="scrollhint">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">In One Line</div>
+        <h1 class="ptitle reveal">Lypo-C基盤を活用し、<br>トラフィック拡大→試用→レビュー→<br>CV最大化の流れを構築する</h1>
+        <div class="cols4" style="margin-top:clamp(24px,5vh,44px);">
+          <div class="mcard reveal"><div class="mn">01</div><div class="mr">Traffic</div><div class="mb">流入拡大</div></div>
+          <div class="mcard reveal"><div class="mn">02</div><div class="mr">Trial</div><div class="mb">少量版で試用</div></div>
+          <div class="mcard reveal"><div class="mn">03</div><div class="mr">Review</div><div class="mb">レビュー蓄積</div></div>
+          <div class="mcard reveal"><div class="mn">04</div><div class="mr">Conversion</div><div class="mb">定期・本品へ</div></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">01 / Current State</div>
+        <h1 class="ptitle reveal">現状認識（2026.05時点）</h1>
+        <div class="kpis">
+          <div class="kpi reveal"><div class="kpi-label">CVR</div><div class="kpi-num"><span class="count" data-target="7.7" data-decimals="1">0</span><small>%</small></div><div class="kpi-note">6.7〜7.7%。悪くない水準</div></div>
+          <div class="kpi reveal"><div class="kpi-label">Repeat Rate</div><div class="kpi-num"><span class="count" data-target="65.1" data-decimals="1">0</span><small>%</small></div><div class="kpi-note">自社EC中心の数値。新ブランドとして高水準</div></div>
+          <div class="kpi reveal"><div class="kpi-label">Traffic — 真の課題</div><div class="kpi-num warn" style="font-size:26px;">不足</div><div class="kpi-note">指名検索中心。新規接点不足</div></div>
+        </div>
+        <p class="reveal" style="margin-top:clamp(20px,4vh,32px);font-size:13.5px;font-weight:600;">結論：CVR・リピートは合格。優先課題はレビュー数と流入の絶対量。</p>
+        <p class="reveal" style="margin-top:12px;font-size:11.5px;color:var(--ink-soft);line-height:1.7;">※Repeat Rateはこの時点では自社EC中心の算出。モール単体のリピート率は稼働半年で楽天34.8%（26.09、楽天タブKPI参照）—新規流入主体の立ち上げ期として妥当な水準。</p>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">02 / Budget</div>
+        <h1 class="ptitle reveal">売上目標・予算進捗</h1>
+        <div class="two-col">
+          <div class="reveal"><div class="eyebrow" style="margin-bottom:8px;">May Target</div><div style="font-size:clamp(24px,3vw,32px);font-weight:700;">¥3,100,000</div><div style="color:var(--warn);font-size:12.5px;margin-top:8px;">現状未達 — 巻き返し策が必要</div></div>
+          <div class="reveal"><div class="eyebrow" style="margin-bottom:8px;">Approach</div><div style="font-size:14px;line-height:1.6;">クロスページ・レビュー施策で巻き返し</div><div style="color:var(--ink-soft);font-size:12.5px;margin-top:8px;">下方修正も含め柔軟に対応</div></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">03 / Top Priorities</div>
+        <h1 class="ptitle reveal">優先施策①②</h1>
+        <div class="two-col">
+          <div class="reveal">
+            <div class="eyebrow" style="margin-bottom:8px;">01・商品ページ改善（即時対応）</div>
+            <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.6;">トラフィック増に備えて最低限の整備。低コスト・即実装。</p>
+            <ul class="status"><li>比較表の追加</li><li>FAQの追加</li></ul>
+          </div>
+          <div class="reveal">
+            <div class="eyebrow" style="margin-bottom:8px;">02・レビュー数の増加</div>
+            <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.6;">当時レビューは1件のみ。CVRのボトルネック。</p>
+            <ul class="status"><li class="done">クーポン施策 <span class="done-tag">実施中</span></li><li>Qoo10：サンプルマーケット検討</li></ul>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">03 / Top Priorities</div>
+        <h1 class="ptitle reveal">優先施策③・トライアル商品（4包）の商品化</h1>
+        <div class="split">
+          <div class="reveal">
+            <p style="font-size:13px;color:var(--ink-soft);margin:0 0 16px;line-height:1.65;">Lypo-Cで実証済みの「少量トライアル→定期・大容量へのアップセル」モデルを横展開する。</p>
+            <ul class="status">
+              <li class="done">JANコード取得 <span class="done-tag">DONE</span></li>
+              <li class="done">価格設定 <span class="done-tag">DONE</span></li>
+              <li>4包トライアル即始動</li>
+              <li>中間容量（10本前後）は検討余地</li>
+            </ul>
+          </div>
+          <div class="split-media reveal"><img src="assets/product_packet.webp" alt="MINERALion 分包"></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel tint">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">04 / Strategic Direction</div>
+        <h1 class="ptitle reveal">戦略の方向性</h1>
+        <div class="strategy2">
+          <div class="card reject reveal"><span class="stag">Rejected</span><h3>単体ブランド戦略</h3><p>MINERALion単体ではまだブランド力が不足。単独での流入は時期尚早。</p></div>
+          <div class="card adopt reveal"><span class="stag">Adopted</span><h3>Lypo-Cとの掛け合わせ</h3><p>既存顧客基盤を活用。クロスコンテンツ・セット訴求で信頼を借用する。</p></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">05-06 / Content &amp; SEO</div>
+        <h1 class="ptitle reveal">コンテンツ戦略とSEO</h1>
+        <div class="two-col">
+          <div class="deflist reveal">
+            <div class="row"><dt>Theme 01</dt><dd>ミネラル不足の啓蒙</dd></div>
+            <div class="row"><dt>Theme 02</dt><dd>生活シーン訴求</dd></div>
+            <div class="row"><dt>Theme 03</dt><dd>Lypo-C文脈での接続</dd></div>
+          </div>
+          <div class="reveal">
+            <div class="eyebrow" style="margin-bottom:10px;">コアキーワード（今期）</div>
+            <div style="font-size:clamp(32px,4vw,44px);font-weight:700;color:var(--navy);margin-bottom:12px;">鉄</div>
+            <p style="font-size:12px;color:var(--ink-soft);line-height:1.65;margin:0;">ミネラル全体は競合過多。楽天・Amazonはモール内流入クエリ／併売データを基点に設計（Googleとは別アルゴリズム）。</p>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">07 / Channel Plan</div>
+        <h1 class="ptitle reveal">モール別戦略</h1>
+        <div class="cols4">
+          <div class="mcard reveal"><span class="badge">Main</span><div class="mn">Rakuten</div><div class="mr">主戦場</div><div class="mb">SEO・コンテンツ・商品ページの三位一体で改善</div></div>
+          <div class="mcard reveal"><span class="badge">Analyze</span><div class="mn">Amazon</div><div class="mr">流入分析の基点</div><div class="mb">流入クエリ・併売データを楽天のKW設計にも反映</div></div>
+          <div class="mcard reveal"><span class="badge gray">Steady</span><div class="mn">Yahoo</div><div class="mr">広告チャネル</div><div class="mb">PayPay経済圏へ、地道に運用</div></div>
+          <div class="mcard reveal"><span class="badge gray">Build-up</span><div class="mn">Qoo10</div><div class="mr">レビュー必須</div><div class="mb">サンプルマーケットでレビュー獲得。メガ割10%引で参加</div></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">08 / Action Items</div>
+        <h1 class="ptitle reveal">アクション分担</h1>
+        <div class="cols3">
+          <div class="acard reveal"><div class="an">宮崎<small>Due 05.20</small></div><ul><li>楽天コンテンツWF・デザイン</li><li>FAQ／比較表</li><li>クロスページ設計</li></ul></div>
+          <div class="acard reveal"><div class="an">モールチーム</div><ul><li>CRM／広告／SEO運用</li><li>商品ページ実装</li></ul></div>
+          <div class="acard reveal"><div class="an">鈴木</div><ul><li>少容量商品化の資料作成</li></ul></div>
+          <div class="acard reveal"><div class="an">金山</div><ul><li>モール流入クエリ調査</li><li>併売商品の調査</li></ul></div>
+          <div class="acard reveal"><div class="an">中村</div><ul><li>Google検索クエリ調査</li></ul></div>
+          <div class="acard reveal"><div class="an">大竹</div><ul><li>Qoo10サンプルマーケット調査</li><li>メガ割参加設定</li></ul></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="panel tint">
+      <div class="panel-inner"><div class="panel-body">
+        <div class="eyebrow reveal">Bridge</div>
+        <h1 class="ptitle reveal">5月に蒔いた種は、今どうなっているか</h1>
+        <div class="bridge">
+          <div class="row reveal"><div class="then"><span class="tag">2026.05</span>4包トライアル：JAN・価格設定DONE</div><div class="arrow">→</div><div class="now"><span class="tag">2026.10</span>レビュー構築・再購入インセンティブの核として再提案中</div></div>
+          <div class="row reveal"><div class="then"><span class="tag">2026.05</span>レビューは当時わずか1件</div><div class="arrow">→</div><div class="now"><span class="tag">2026.10</span>月200件前後の購入。レビュー転換は今日の相談テーマ</div></div>
+          <div class="row reveal"><div class="then"><span class="tag">2026.05</span>Lypo-C掛け合わせ戦略をAdopt</div><div class="arrow">→</div><div class="now"><span class="tag">2026.10</span>公式ECで継続中。モールでの再現が課題</div></div>
+          <div class="row reveal"><div class="then"><span class="tag">2026.05</span>新規接点の不足が真の課題</div><div class="arrow">→</div><div class="now"><span class="tag">2026.10</span>半年で楽天4.8倍・Amazon5.7倍。規模はまだ全体の27%</div></div>
+          <div class="row reveal"><div class="then"><span class="tag">2026.05</span>Qoo10はメガ割10%引で参加を決定</div><div class="arrow">→</div><div class="now"><span class="tag">2026.10</span>楽天・Amazonではこの前提を踏襲しない。値引きとブランディングは両立しないという教訓</div></div>
+        </div>
+        <div class="seal reveal"><img src="assets/logo_square.jpg" alt="MINERALion"><span>MINERALion ／ 株式会社スピック — Internal Use Only</span></div>
+      </div></div>
+    </section>
+
+  </div>
+
+  <button class="chev left" aria-label="前へ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <button class="chev right" aria-label="次へ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+
+<div class="hud"><span class="counter tabular">01 / 12</span></div>
+
+<script>
+(function(){
+  "use strict";
+
+  function easeOutCubic(t){ return 1 - Math.pow(1-t, 3); }
+  function animateCount(el){
+    if(el._done) return; el._done = true;
+    var target = parseFloat(el.getAttribute('data-target'));
+    var decimals = parseInt(el.getAttribute('data-decimals')||'0',10);
+    var dur = 900, start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min(1, (ts-start)/dur);
+      el.textContent = (target*easeOutCubic(p)).toFixed(decimals);
+      if(p<1) requestAnimationFrame(step); else el.textContent = target.toFixed(decimals);
+    }
+    requestAnimationFrame(step);
+  }
+
+  var decks = {};
+
+  function Deck(hscroll){
+    this.el = hscroll;
+    this.panels = Array.prototype.slice.call(hscroll.querySelectorAll('.panel'));
+    this.index = 0;
+    var self = this;
+
+    // reveal + count-up via IntersectionObserver
+    this.io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting && e.intersectionRatio > 0.45){
+          e.target.classList.add('seen');
+          e.target.querySelectorAll('.count[data-target]').forEach(animateCount);
+        }
+      });
+    }, { root: hscroll, threshold: [0.45] });
+    this.panels.forEach(function(p){ self.io.observe(p); });
+
+    // per-panel wheel: vertical scroll first if panel overflows, else page horizontally
+    this.panels.forEach(function(panel){
+      panel.addEventListener('wheel', function(e){
+        var needsV = panel.scrollHeight > panel.clientHeight + 2;
+        if(needsV){
+          var atTop = panel.scrollTop <= 0;
+          var atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 1;
+          var down = e.deltaY > 0;
+          if(!((atTop && !down) || (atBottom && down))) return; // let native vertical scroll happen
+        }
+        e.preventDefault();
+        hscroll.scrollLeft += (Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX);
+      }, { passive:false });
+    });
+
+    hscroll.addEventListener('scroll', function(){ self.onScroll(); }, { passive:true });
+  }
+  Deck.prototype.onScroll = function(){
+    var w = this.el.clientWidth || 1;
+    this.index = Math.round(this.el.scrollLeft / w);
+    updateHud(this.index, this.panels.length);
+  };
+  Deck.prototype.goTo = function(i){
+    i = Math.max(0, Math.min(this.panels.length-1, i));
+    this.el.scrollTo({ left: i*this.el.clientWidth, behavior:'smooth' });
+  };
+  Deck.prototype.go = function(delta){ this.goTo(this.index+delta); };
+
+  function updateHud(i,total){
+    document.querySelector('.hud .counter').textContent =
+      String(i+1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+  }
+  function activeDeckKey(){
+    return document.querySelector('.tabbtn.active').getAttribute('data-tab');
+  }
+
+  document.querySelectorAll('.hscroll').forEach(function(el){
+    decks[el.id.replace('deck-','')] = new Deck(el);
+  });
+  updateHud(0, decks[activeDeckKey()].panels.length);
+
+  document.querySelectorAll('.tabbtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var tab = btn.getAttribute('data-tab');
+      document.querySelectorAll('.tabbtn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+      document.querySelectorAll('.hscroll').forEach(function(h){ h.classList.toggle('active', h.id==='deck-'+tab); });
+      var d = decks[tab];
+      d.el.scrollLeft = 0; d.index = 0;
+      updateHud(0, d.panels.length);
+    });
+  });
+
+  document.querySelector('.chev.left').addEventListener('click', function(){ decks[activeDeckKey()].go(-1); });
+  document.querySelector('.chev.right').addEventListener('click', function(){ decks[activeDeckKey()].go(1); });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key!=='ArrowLeft' && e.key!=='ArrowRight') return;
+    decks[activeDeckKey()].go(e.key==='ArrowRight'?1:-1);
+  });
+
+  // hide scroll hint after first interaction
+  ['wheel','touchstart','keydown'].forEach(function(evt){
+    window.addEventListener(evt, function once(){
+      document.querySelectorAll('.scrollhint').forEach(function(s){ s.style.opacity='0'; s.style.transition='opacity .4s'; });
+      window.removeEventListener(evt, once);
+    }, { passive:true, once:true });
+  });
+})();
+</script>
+
+</body></html>
