@@ -1016,6 +1016,14 @@ tbody tr:last-child td{ border-bottom:1px solid var(--line); }
       var d = decks[tab];
       d.el.scrollLeft = 0; d.index = 0;
       updateHud(0, d.panels.length);
+      // deck was display:none when its IntersectionObserver started watching,
+      // so re-attach now that it's visible to force a correct recheck
+      d.panels.forEach(function(p){ d.io.unobserve(p); d.io.observe(p); });
+      var first = d.panels[0];
+      if(!first.classList.contains('seen')){
+        first.classList.add('seen');
+        first.querySelectorAll('.count[data-target]').forEach(animateCount);
+      }
     });
   });
 
